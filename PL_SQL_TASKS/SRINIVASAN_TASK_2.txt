@@ -1,0 +1,183 @@
+Select * from Stud_Actual_Mark;
+Select * from Stud_Initial_Mark;
+Select * from Stud_Marksheet_Srp ;
+Select * from Stud_Master_Srp;
+
+1. Using a Cursor to Retrieve a Marks & Grades and then Insert into Stud_Marksheet_Srp 
+
+DECLARE
+    CURSOR C1 IS
+        SELECT A.YEAR "YEAR", 
+               A.STD_ID "STUD_ID",
+               A.SEM "SEM",
+               A.TAMIL+B.TAMIL "TAMIL",
+               A.ENGLISH+B.ENGLISH "ENGLISH",
+               A.MATHS+B.MATHS "MATHS",
+               A.SCIENCE+B.SCIENCE "SCIENCE",    
+               A.SOCIAL+B.SOCIAL "SOCIAL",
+               ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) "TOT_MARK",
+               ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) / 5 "PCT",
+               CASE
+                 WHEN ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                       (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) BETWEEN 450 AND 500 THEN 'A'
+                 WHEN ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                       (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) BETWEEN 400 AND 449 THEN 'B'
+                 WHEN ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                       (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) BETWEEN 350 AND 399 THEN 'C'
+                 WHEN ((A.TAMIL+A.ENGLISH+A.MATHS+A.SCIENCE+A.SOCIAL) +
+                       (B.TAMIL+B.ENGLISH+B.MATHS+B.SCIENCE+B.SOCIAL)) BETWEEN 300 AND 349 THEN 'D'
+                 ELSE 'E' 
+               END AS GRADE
+          FROM Stud_Actual_Mark A,
+               Stud_Initial_Mark B 
+         WHERE A.STD_ID = B.STD_ID;
+    
+    CR1 C1%ROWTYPE;
+BEGIN
+    DELETE FROM Stud_Marksheet_Srp;
+    
+    FOR CR1 IN C1 LOOP
+        INSERT INTO Stud_Marksheet_Srp (YEAR,
+                                        	                 STD_ID, 
+                                        	                 SEM, 
+                                                                          TAMIL,          
+                                                                          ENGLISH, 
+                                                                          MATHS, 
+                                                                          SCIENCE,        
+                                                                          SOCIAL, 
+                                                                          TOTAL, 
+                                                                         PERCENTAGE,
+      			                GRADE)
+       	 VALUES (CR1.YEAR,
+                		CR1.STUD_ID,
+                		CR1.SEM,
+                		CR1.TAMIL,
+                		CR1.ENGLISH,
+                		CR1.MATHS,
+                		CR1.SCIENCE,
+                		CR1.SOCIAL,
+                		CR1.TOT_MARK,
+                		CR1.PCT,
+                		CR1.GRADE);
+    END LOOP;
+END;
+/
+
+=====================================================================================
+
+2.Using a PLSQL Procedure to Retrieve a Marks & Grades and then Insert into Stud_Marksheet_Srp:-
+
+CREATE OR REPLACE PROCEDURE Marksheet_grade_final
+(V_YEAR IN NUMBER,
+ V_SEM IN NUMBER)
+IS
+    CURSOR C1 
+    IS
+    SELECT A.YEAR "YEAR", 
+               A.STD_ID "STUD_ID",
+               A.SEM "SEM",
+               A.TAMIL + B.TAMIL "TAMIL",
+               A.ENGLISH + B.ENGLISH "ENGLISH",
+               A.MATHS + B.MATHS "MATHS",
+               A.SCIENCE + B.SCIENCE "SCIENCE",    
+               A.SOCIAL + B.SOCIAL "SOCIAL",
+               ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) "TOT_MARK",
+               (((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) / 5) "PCT",
+               CASE
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 450 THEN 'A'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 400 THEN 'B'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 350 THEN 'C'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 300 THEN 'D'
+                 ELSE 'E' 
+               END AS GRADE
+          FROM Stud_Actual_Mark A,
+               Stud_Initial_Mark B 
+         WHERE A.STD_ID = B.STD_ID
+           AND A.YEAR = V_YEAR
+           AND A.SEM = V_SEM;
+    
+BEGIN
+    DELETE FROM Stud_Marksheet_Srp
+    WHERE YEAR = V_YEAR
+      AND SEM = V_SEM;
+      
+    FOR CR1 IN C1 LOOP
+        INSERT INTO Stud_Marksheet_Srp (YEAR,STD_ID,SEM,TAMIL,ENGLISH,MATHS, 
+                                 SCIENCE,SOCIAL,TOTAL,PERCENTAGE,GRADE)
+        VALUES (CR1.YEAR,CR1.STUD_ID,CR1.SEM,CR1.TAMIL,CR1.ENGLISH,CR1.MATHS,
+                CR1.SCIENCE,CR1.SOCIAL,CR1.TOT_MARK,CR1.PCT,CR1.GRADE);
+    END LOOP;
+END;
+/
+
+===
+Execution:
+BEGIN
+   Marksheet_grade_final(2024,1);
+END;
+/
+
+
+Using an Exception:
+
+CREATE OR REPLACE PROCEDURE Marksheet_grade_final
+(V_YEAR IN NUMBER,
+ V_SEM IN NUMBER)
+IS
+    CURSOR C1 
+    IS
+    SELECT A.YEAR "YEAR", 
+               A.STD_ID "STUD_ID",
+               A.SEM "SEM",
+               A.TAMIL + B.TAMIL "TAMIL",
+               A.ENGLISH + B.ENGLISH "ENGLISH",
+               A.MATHS + B.MATHS "MATHS",
+               A.SCIENCE + B.SCIENCE "SCIENCE",    
+               A.SOCIAL + B.SOCIAL "SOCIAL",
+               ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) "TOT_MARK",
+               (((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) / 5) "PCT",
+               CASE
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 450 THEN 'A'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 400 THEN 'B'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 350 THEN 'C'
+                 WHEN ((A.TAMIL + A.ENGLISH + A.MATHS + A.SCIENCE + A.SOCIAL) +
+                       (B.TAMIL + B.ENGLISH + B.MATHS + B.SCIENCE + B.SOCIAL)) >= 300 THEN 'D'
+                 ELSE 'E' 
+               END AS GRADE
+          FROM Stud_Actual_Mark A,
+               Stud_Initial_Mark B 
+         WHERE A.STD_ID = B.STD_ID
+           AND A.YEAR = V_YEAR
+           AND A.SEM = V_SEM;
+    
+BEGIN
+    DELETE FROM Stud_Marksheet_Srp
+    WHERE YEAR = V_YEAR
+      AND SEM = V_SEM;
+      
+    FOR CR1 IN C1 LOOP
+        INSERT INTO Stud_Marksheet_Srp (YEAR, STD_ID, SEM, TAMIL, ENGLISH, MATHS, 
+                                        SCIENCE, SOCIAL, TOTAL, PERCENTAGE, GRADE)
+        VALUES (CR1.YEAR, CR1.STUD_ID, CR1.SEM, CR1.TAMIL, CR1.ENGLISH, CR1.MATHS,
+                CR1.SCIENCE, CR1.SOCIAL, CR1.TOT_MARK, CR1.PCT, CR1.GRADE);
+    END LOOP;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Year and Sem are not found in the Stud_Marksheet_Srp table');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/

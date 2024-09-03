@@ -1,0 +1,9 @@
+Create table std_int_mark_config_Srp as (Select * from std_int_mark_config_l);
+Create table std_act_mark_config_Srp as (Select * from std_act_mark_config_l);
+Create table std_mast_l_Srp as (Select * from std_mast_l);
+Create table std_marksheet_l_Srp as (Select * from std_marksheet_l);
+
+Select * from std_int_mark_config_Srp;
+Select * from std_act_mark_config_Srp;
+Select * from std_mast_l_Srp;
+Select * from std_marksheet_l_Srp; 

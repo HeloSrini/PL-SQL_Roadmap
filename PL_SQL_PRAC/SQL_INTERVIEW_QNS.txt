@@ -1,0 +1,127 @@
+1.WRITE A SQL QUERY TO DISPLAY A ALPHABETS FROM (A-Z)
+
+SELECT CHR(LEVEL+64) FROM DUAL
+CONNECT BY LEVEL <=26
+
+CHR(LEVEL+64
+------------
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+
+26 rows selected.
+
+
+2. Handling duplicate records in a SQL table typically involves identifying and removing the duplicates to ensure data integrity. Here’s how you can approach this:
+
+1. Identify Duplicates:
+First, you need to identify the duplicate records. A common method is to use a GROUP BY clause with the HAVING clause to find rows with the same values in one or more columns.
+
+sql
+Copy code
+SELECT column1, column2, COUNT(*)
+FROM your_table
+GROUP BY column1, column2
+HAVING COUNT(*) > 1;
+2. Remove Duplicates:
+Option 1: Delete Duplicate Rows While Keeping One Instance
+
+sql
+Copy code
+DELETE FROM your_table
+WHERE rowid NOT IN (
+  SELECT MIN(rowid)
+  FROM your_table
+  GROUP BY column1, column2
+);
+
+Option 2: Use a Temporary Table
+
+Copy distinct records to a temporary table, truncate the original table, and then re-insert the unique records.
+
+sql
+Copy code
+CREATE TABLE temp_table AS
+SELECT DISTINCT * FROM your_table;
+
+TRUNCATE TABLE your_table;
+
+INSERT INTO your_table
+SELECT * FROM temp_table;
+
+DROP TABLE temp_table;
+3. Prevent Future Duplicates:
+Add Unique Constraints:
+
+You can add a unique constraint to the relevant columns to prevent future duplicates.
+
+sql
+Copy code
+ALTER TABLE your_table
+ADD CONSTRAINT unique_constraint_name UNIQUE (column1, column2);
+Use Triggers:
+
+In some cases, you might use triggers to prevent the insertion of duplicate records.
+Example:
+Let's say you have a table employees with potential duplicates in the email column:
+
+sql
+Copy code
+DELETE FROM employees
+WHERE rowid NOT IN (
+  SELECT MIN(rowid)
+  FROM employees
+  GROUP BY email
+);
+This approach removes duplicate rows while retaining the first occurrence of each unique email address.
+
+
+3.WRITE A SQL QUERY TO GET THE CUMULATIVE SUM OF A COLUMN IN A TABLE
+
+SELECT
+    id,
+    sale_date,
+    amount,
+    SUM(amount) OVER (ORDER BY sale_date) AS cumulative_sum
+FROM
+    sales;
+
+SELECT EMPNO,
+ENAME,
+HIREDATE,
+SAL,
+SUM(SAL) OVER (ORDER BY HIREDATE) AS CUM_SUM
+FROM 
+EMP_SAMPLE;
+
+
+4.WRITE A QUERY TO FIND THE EMPLOYEE WHO GOT A SAME SALARY
+
+SELECT salary
+FROM employees
+GROUP BY salary
+HAVING COUNT(*) > 1;
+

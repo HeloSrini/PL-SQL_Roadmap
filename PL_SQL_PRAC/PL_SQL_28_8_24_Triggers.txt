@@ -1,0 +1,314 @@
+SQL> CREATE OR REPLACE TRIGGER BEFORE_INSERT
+  2  BEFORE INSERT
+  3  ON Geeks
+  4  FOR EACH ROW
+  5  BEGIN
+  6      INSERT INTO Affect (Id, Name, Score)
+  7      VALUES (:NEW.Id, :NEW.Name, :NEW.Score);
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> select * from affect;
+
+no rows selected
+
+SQL> select * from geeks;
+
+        ID NAME                                                              SCORE
+---------- ------------------------------------------------------------ ----------
+         1 Sam                                                                 800
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (2, 'Ram', 699);
+
+1 row created.
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (3, 'Tom', 250);
+
+1 row created.
+
+SQL>  select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+
+SQL> CREATE OR REPLACE TRIGGER BEFORE_INSERT1
+  2  AFTER INSERT
+  3  ON Geeks
+  4  FOR EACH ROW
+  5  BEGIN
+  6      INSERT INTO Affect (Id, Name, Score)
+  7      VALUES (:NEW.Id, :NEW.Name, :NEW.Score);
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (4, 'Om', 350);
+
+1 row created.
+
+SQL> select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+         4 Om                                                   350
+         4 Om                                                   350
+
+SQL> commit;
+Commit complete.
+==================================================================
+
+CREATE OR REPLACE TRIGGER Stud_Srini
+BEFORE UPDATE OF TAMIL,ENGLISH,MATHS,SCIENCE,SOCIAL ON Stud_Srini
+FOR EACH ROW
+BEGIN
+  IF ((:OLD.TAMIL <>:NEW.TAMIL) OR
+        (:OLD.ENGLISH <>:NEW.ENGLISH) OR
+        (:OLD.MATHS <>:NEW.MATHS) OR
+        (:OLD.SCIENCE <>:NEW.SCIENCE) OR
+        (:OLD.SOCIAL<>:NEW.SOCIAL)) THEN
+          :NEW.TOTAL :=  NVL(:NEW.TAMIL,:OLD.TAMIL) +
+	                      NVL(:NEW.ENGLISH,:OLD.ENGLISH) +
+		   NVL(:NEW.MATHS,:OLD.MATHS )+
+           		   NVL(:NEW.SCIENCE,:OLD.SCIENCE)+
+		   NVL(:NEW.SOCIAL,:OLD.SOCIAL);
+ END IF;
+END ;
+/
+
+==================================================================
+CREATE OR REPLACE TRIGGER trg_before_insert_emp
+BEFORE INSERT ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Before Insert Trigger Fired');
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_insert_audit_emp
+AFTER INSERT ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  INSERT INTO Emp_Sample_Audit (Emp_Id, Action_Type, Action_Date)
+  VALUES (:NEW.Emp_Id, 'INSERT', SYSDATE);
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_restrict_low_salary
+BEFORE INSERT ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  IF :NEW.Salary < 1000 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Salary cannot be less than 1000');
+  END IF;
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_uppercase_name
+BEFORE INSERT OR UPDATE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  :NEW.Emp_Name := UPPER(:NEW.Emp_Name);
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_audit_salary_change
+AFTER UPDATE OF Salary ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  INSERT INTO Emp_Sample_Audit (Emp_Id, Old_Salary, New_Salary, Action_Date)
+  VALUES (:OLD.Emp_Id, :OLD.Salary, :NEW.Salary, SYSDATE);
+END;
+
+==================================================================
+CREATE OR REPLACE TRIGGER trg_prevent_manager_deletion
+BEFORE DELETE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  IF :OLD.Job_Title = 'Manager' THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Managers cannot be deleted');
+  END IF;
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_track_deletions
+AFTER DELETE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  INSERT INTO Deleted_Employees (Emp_Id, Emp_Name, Deleted_Date)
+  VALUES (:OLD.Emp_Id, :OLD.Emp_Name, SYSDATE);
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_auto_generate_emp_id
+BEFORE INSERT ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  :NEW.Emp_Id := Emp_Seq.NEXTVAL;  -- Assuming Emp_Seq is a sequence you've created
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_check_dept_id_not_null
+BEFORE INSERT OR UPDATE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  IF :NEW.Dept_Id IS NULL THEN
+    RAISE_APPLICATION_ERROR(-20003, 'Dept_Id cannot be null');
+  END IF;
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_update_last_modified
+BEFORE UPDATE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  :NEW.Last_Modified := SYSDATE;
+END;
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER trg_salary_cap
+BEFORE INSERT OR UPDATE ON Emp_Sample
+FOR EACH ROW
+BEGIN
+  IF :NEW.Salary > 20000 THEN
+    :NEW.Salary := 20000;
+  END IF;
+END;
+
+==================================================================
+CREATE TABLE Department_Aggregates (
+    Dept_Id       NUMBER PRIMARY KEY,
+    Total_Salary  NUMBER DEFAULT 0
+);
+
+INSERT INTO Department_Aggregates (Dept_Id, Total_Salary)
+SELECT Dept_Id, SUM(Salary)
+FROM Emp_Sample
+GROUP BY Dept_Id;
+
+CREATE OR REPLACE TRIGGER trg_emp_sample_salary_aggregate
+AFTER INSERT OR DELETE ON Emp_Sample
+DECLARE
+    v_dept_id NUMBER;
+    v_total_salary NUMBER;
+BEGIN
+    IF INSERTING THEN
+        v_dept_id := :NEW.Dept_Id;
+    ELSIF DELETING THEN
+        v_dept_id := :OLD.Dept_Id;
+    END IF;
+
+    SELECT SUM(Salary)
+    INTO v_total_salary
+    FROM Emp_Sample
+    WHERE Dept_Id = v_dept_id;
+
+    IF v_total_salary IS NULL THEN
+        v_total_salary := 0;
+    END IF;
+   
+    UPDATE Department_Aggregates
+    SET Total_Salary = v_total_salary
+    WHERE Dept_Id = v_dept_id;
+END;
+/
+
+
+INSERTION:
+
+CREATE TABLE SUPERHEROES(
+SH_NAME   VARCHAR2(15)
+);
+
+CREATE OR REPLACE TRIGGER bi_Superheroes
+BEFORE INSERT ON SUPERHEROES
+FOR EACH ROW
+ENABLE
+
+DECLARE
+   V_USER  VARCHAR2(20);
+BEGIN
+  SELECT USER INTO V_USER FROM DUAL;
+  DBMS_OUTPUT.PUT_LINE('Inserted:' ||V_USER);
+END;
+/
+
+UPDATION:
+
+CREATE OR REPLACE TRIGGER bud_Superheroes
+BEFORE UPDATE ON SUPERHEROES
+FOR EACH ROW
+ENABLE
+
+DECLARE
+   V_USER  VARCHAR2(20);
+BEGIN
+  SELECT USER INTO V_USER FROM DUAL;
+  DBMS_OUTPUT.PUT_LINE('Inserted:' ||V_USER);
+END;
+/
+
+
+UPDATE SUPERHEROES
+SET SH_NAME='Superman'
+WHERE sh_name='Micky';
+
+
+
+CREATE OR REPLACE TRIGGER TR_SUPERS
+BEFORE INSERT OR DELETE OR UPDATE ON SUPERHEROES
+FOR EACH ROW
+ENABLE
+DECLARE
+   V_USER  VARCHAR2(20);
+BEGIN
+   SELECT USER INTO V_USER FROM DUAL;
+   
+   IF INSERTING THEN
+       DBMS_OUTPUT.PUT_LINE('One Row Inserted: ' || V_USER);
+   ELSIF DELETING THEN
+       DBMS_OUTPUT.PUT_LINE('One Row Deleted: ' || V_USER);
+   ELSIF UPDATING THEN
+       DBMS_OUTPUT.PUT_LINE('One Row Updated: ' || V_USER);
+   END IF;  
+END;
+/
+
+INSERT INTO SUPERHEROES VALUES('Srinivasan');
+
+UPDATE SUPERHEROES
+SET SH_NAME='Srini_Karthi'
+WHERE SH_NAME='Srinivasan';
+
+DELETE FROM SUPERHEROES
+WHERE SH_NAME='Srini_Karthi';
+
+ 
+
+
+
+
+
+

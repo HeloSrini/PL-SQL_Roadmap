@@ -1,0 +1,140 @@
+1.PL/SQL TRIGGER : Whenever the day is in Friday If I Inserted a Record in Emp_Sample Raise an Error:-
+
+Create OR Replace TRIGGER Secure_Emp112
+Before Insert On Emp_Sample
+BEGIN
+ IF (TO_CHAR(SYSDATE,'DY') IN ('Fri')) THEN
+	RAISE_APPLICATION_ERROR(-20999,'You May Not Insert');
+ END IF;
+END;
+
+INSERT INTO EMP_SAMPLE VALUES(324,'Srinivas','Trainee',7737,SYSDATE,5356,03,10,4950);
+
+==================================================================================================
+2. PL/SQL TRIGGER : Ename and Empno is defined in Begin Block If Deleted It Will Raise an Error.
+
+CREATE OR REPLACE TRIGGER Secure_Emp
+AFTER INSERT OR UPDATE OR DELETE ON EMP_SAMPLE
+FOR EACH ROW
+BEGIN
+    IF :OLD.ENAME = 'JAMES' AND :OLD.EMPNO = 7900 THEN
+        IF DELETING THEN
+            RAISE_APPLICATION_ERROR(-20999, 'You may not delete here');
+        ELSIF INSERTING THEN
+            RAISE_APPLICATION_ERROR(-20999, 'You may not insert here');
+        ELSIF UPDATING('SAL') THEN
+            RAISE_APPLICATION_ERROR(-20999, 'You may not update the SAL field here');
+        ELSE 
+            RAISE_APPLICATION_ERROR(-20999, 'You are in the ELSE block');
+        END IF;
+    END IF;
+END;
+/
+
+DELETE FROM EMP_SAMPLE WHERE ENAME = 'JAMES';
+
+INSERT INTO EMP_SAMPLE VALUES(7200,'SRINI','TRAINEE',NULL,NULL,NULL,NULL,NULL,NULL);
+
+UPDATE EMP_SAMPLE 
+SET ENAME = 'JAMES'
+WHERE EMPN0=7369;
+================================================================================================
+3. PL/SQL TRIGGER: Insert a Record to Audit_table from Emp_Sample table Based Specified Trigger Conditions.
+
+CREATE TABLE EMP_AUDIT (
+    AUDIT_ID NUMBER PRIMARY KEY,
+    EMPNO NUMBER,
+    OLD_SAL NUMBER,
+    NEW_SAL NUMBER,
+    CHANGED_ON DATE,
+    CHANGED_BY VARCHAR2(50)
+);
+
+CREATE OR REPLACE TRIGGER log_salary_changes
+BEFORE UPDATE OF SAL ON EMP_SAMPLE
+FOR EACH ROW
+BEGIN
+    INSERT INTO EMP_AUDIT(AUDIT_ID, EMPNO, OLD_SAL, NEW_SAL, CHANGED_ON, CHANGED_BY)
+    VALUES(EMP_AUDIT_SEQ.NEXTVAL,:OLD.EMPNO,:OLD.SAL,:NEW.SAL,SYSDATE,USER);
+END;
+/
+
+Sequence Creation:
+
+Create Sequence EMP_AUDIT_SEQ:
+Sequence Created.
+
+Update On Emp_Sample it will Update to the Audit_table:
+
+ UPDATE EMP_SAMPLE
+ SET SAL = 4500
+ WHERE EMPNO=7900;
+
+ UPDATE EMP_SAMPLE
+ SET SAL = 5600
+ WHERE EMPNO=7844;
+===========================================================================================
+4. PL/SQL TRIGGER : If I Inserted a Salary in Negative it will Raise an Error Based On Trigger Condition.
+
+CREATE OR REPLACE TRIGGER Trg_chk_Sal
+AFTER INSERT ON EMP_SAMPLE
+FOR EACH ROW
+BEGIN
+	IF :NEW.SAL < 0 THEN 
+		RAISE_APPLICATION_ERROR(-20999,'Salary Cannot be Negative');
+	END IF;
+END;
+
+
+INSERT INTO EMP_SAMPLE VALUES(2024,'SRINI',NULL,NULL,NULL,8000,0,0,0);
+
+===========================================================================================
+5. Row_Level_Trigger & State_Level_Trigger.
+
+CREATE OR REPLACE TRIGGER trg_check
+BEFORE UPDATE OF sal ON magic_hp
+FOR EACH ROW
+BEGIN
+	IF (:OLD.sal <> :NEW.sal) THEN
+		INSERT INTO log_hp1 Values(:OLD.empno,:OLD.sal,:NEW.sal,TO_CHAR(SYSDATE,'DD-MM-YY HH:MI:SS'));
+	END IF;
+END;
+
+CREATE OR REPLACE TRIGGER trg_check1
+BEFORE UPDATE ON magic_hp
+BEGIN   
+	IF UPDATING THEN
+		INSERT INTO log_hp1 Values(1,2,3,TO_CHAR(SYSDATE,'DD-MM-YY HH:MI:SS'));
+	END IF;
+END;
+
+
+UPDATE magic_hp
+SET sal = 1000;
+
+1,2,3,TO_CHAR(SYSDATE,'DD-MM-YY HH:MI:SS')
+
+===========================================================================================
+SELECT TRIGGER_BODY
+FROM USER_TRIGGERS
+WHERE TRIGGER_NAME = 'log_salary_changes';
+
+CREATE OR REPLACE PROCEDURE create_salary_trigger AS
+BEGIN
+    EXECUTE IMMEDIATE 
+        CREATE OR REPLACE TRIGGER prevent_negative_salary
+        BEFORE INSERT OR UPDATE ON EMP_SAMPLE
+        FOR EACH ROW
+        BEGIN
+            IF :NEW.SAL < 0 THEN
+                RAISE_APPLICATION_ERROR(-20001, ''Salary cannot be negative'');
+        END IF;
+        END;
+END;
+/
+
+
+BEGIN
+  create_salary_trigger
+END;
+

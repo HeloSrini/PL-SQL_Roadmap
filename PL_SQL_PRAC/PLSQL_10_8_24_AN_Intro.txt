@@ -1,0 +1,154 @@
+MANUAL INPUT:-
+
+ADDITION OF 2 NO'S
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+         NUM_1	NUMBER(5);
+         NUM_2 	NUMBER(5);
+         RESULT_NUM     NUMBER(10);
+
+BEGIN
+        NUM_1 := 100;
+        NUM_2 := 100;
+        RESULT_NUM := NUM_1+NUM_2;
+         
+        DBMS_OUTPUT.PUT_LINE('ADDITION RESULT IS:' ||  RESULT_NUM);
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+USER_INPUT:-
+
+ADDITION OF 2 NO'S
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+         NUM_1	NUMBER(5);
+         NUM_2 	NUMBER(5);
+         RESULT_NUM     NUMBER(10);
+
+BEGIN
+        NUM_1 := &NUM_1;
+        NUM_2 := &NUM_2;
+        RESULT_NUM := NUM_1+NUM_2;
+         
+        DBMS_OUTPUT.PUT_LINE('ADDITION RESULT IS:' ||  RESULT_NUM);
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SUBTRACTION OF 2 NO'S
+
+DECLARE
+         NUM_1	NUMBER(5);
+         NUM_2 	NUMBER(5);
+         RESULT_NUM     NUMBER(10);
+
+BEGIN
+        NUM_1 := &NUM_1;
+        NUM_2 := &NUM_2;
+        RESULT_NUM := NUM_1- NUM_2;
+         
+        DBMS_OUTPUT.PUT_LINE('SUBTACTION OF RESULT IS:' ||  RESULT_NUM);
+END;
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MULTIPLICATION OF 2 NO'S
+
+DECLARE
+         NUM_1	NUMBER(5);
+         NUM_2 	NUMBER(5);
+         RESULT_NUM     NUMBER(10);
+
+BEGIN
+        NUM_1 := &NUM_1;
+        NUM_2 := &NUM_2;
+        RESULT_NUM := NUM_1 * NUM_2;
+         
+        DBMS_OUTPUT.PUT_LINE('MULTIPLICATION OF RESULT IS:' ||  RESULT_NUM);
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DIVISION OF 2 NO'S
+
+DECLARE
+         NUM_1	NUMBER(5);
+         NUM_2 	NUMBER(5);
+         RESULT_NUM     NUMBER(10);
+
+BEGIN
+        NUM_1 := &NUM_1;
+        NUM_2 := &NUM_2;
+        RESULT_NUM := NUM_1 % NUM_2;
+         
+        DBMS_OUTPUT.PUT_LINE('MULTIPLICATION OF RESULT IS:' ||  RESULT_NUM);
+END;
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+DEFINE AT VARIABLE DECLARATION
+
+DECLARE
+     NUM_1            NUMBER(5)  := &NUM_1;
+     NUM_2            NUMBER(5)  := &NUM_2;
+
+BEGIN
+     DBMS_OUTPUT.PUT_LINE ('ADDITION RESULT IS:' || (NUM_1 + NUM_2));
+
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT INTO STATEMENT IN PL/SQL:-
+
+SELECT INTO USING SINGLE_COLUMN 
+--------------------------------------------------
+DECLARE 
+	D_salary	NUMBER(10);
+
+BEGIN
+       SELECT BASIC_SAL
+         INTO D_Salary
+         FROM EMP_SRINI
+      WHERE EMPID=2002;
+
+        DBMS_OUTPUT.PUT_LINE('GOPAL SALARY IS :' || D_salary);
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT INTO USING MULTI_COLUMN 
+
+DECLARE
+        D_salary     NUMBER(10);
+        D_date        DATE;
+
+BEGIN
+     SELECT BASIC_SAL,
+	 DOB
+     INTO   D_salary,
+                  D_date 
+     FROM EMP_SRINI
+     WHERE EMPID = 2002;
+  
+     DBMS_OUTPUT.PUT_LINE('GANESH''S SALARY IS:' || D_salary || 'and Belongs to' || D_date);
+
+END;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+%ROWTYPE - RECORD TYPE DECLARATION
+
+DECLARE 
+    NUM_1 NUMBER := 10;
+    NUM_2 NUMBER := 20;
+
+BEGIN
+   IF NUM_1 > NUM_2 THEN
+       DBMS_OUTPUT.PUT_LINE("NUM_1 IS GREATER");
+   ENDIF;
+END;
+
+

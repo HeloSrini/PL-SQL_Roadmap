@@ -1,0 +1,101 @@
+1.STUDENT_GRADE_SRP
+
+BEGIN 
+FOR CR1 IN (SELECT * FROM STUD_SRINI WHERE TAMIL = (SELECT MAX(TAMIL) FROM STUD_SRINI))
+LOOP
+    INSERT INTO STUDENT_GRADE_SRP VALUES (CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,'TAMIL',CR1.TAMIL);
+END LOOP;
+
+FOR CR1 IN (SELECT * FROM STUD_SRINI WHERE ENGLISH = (SELECT MAX(ENGLISH) FROM STUD_SRINI))
+LOOP
+    INSERT INTO STUDENT_GRADE_SRP VALUES (CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,'ENGLISH',CR1.ENGLISH);
+END LOOP;
+
+FOR CR1 IN (SELECT * FROM STUD_SRINI WHERE MATHS = (SELECT MAX(MATHS) FROM STUD_SRINI))
+LOOP
+    INSERT INTO STUDENT_GRADE_SRP VALUES (CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,'MATHS',CR1.MATHS);
+END LOOP;
+
+FOR CR1 IN (SELECT * FROM STUD_SRINI WHERE SCIENCE = (SELECT MAX(SCIENCE) FROM STUD_SRINI))
+LOOP
+    INSERT INTO STUDENT_GRADE_SRP VALUES (CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,'SCIENCE',CR1.SCIENCE);
+END LOOP;
+
+FOR CR1 IN (SELECT * FROM STUD_SRINI WHERE SOCIAL = (SELECT MAX(SOCIAL) FROM STUD_SRINI))
+LOOP
+    INSERT INTO STUDENT_GRADE_SRP VALUES (CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,'SOCIAL',CR1.SOCIAL);
+END LOOP;
+COMMIT;
+END;
+
+PL/SQL procedure successfully completed.
+
+
+OUTPUT:
+
+SQL> SELECT * FROM STUDENT_GRADE_SRP;
+
+    REG_NO STUD_NAME                                    DOB             	SUBJECT                         MARK
+---------- ------------------------------------------ --------------- 	----------------------	 ----------
+      1006 SANA                                       	11-APR-02       	TAMIL                                100
+      1010 SHARMILA                                   	18-AUG-02       	TAMIL                                100
+      1004 MOHAN                                      	11-AUG-02       	ENGLISH                            100
+      1009 AHMED                                      	17-JUL-02       	ENGLISH                            100
+      1006 SANA                                       	11-APR-02      	 MATHS                              100
+      1007 SHALINI                                    	12-MAY-01      	 MATHS                              100
+      1008 PRIYADARSHINI                             16-JUN-02       	MATHS                               100
+      1009 AHMED                                      	17-JUL-02       	MATHS                               100
+      1002 VIDYASAGAR                                    20-MAR-02      	 SCIENCE                            100
+      1006 SANA                                       	11-APR-02       	SCIENCE                            100
+      1008 PRIYADARSHINI                              16-JUN-02       	SCIENCE                            100
+      1005 THANISH                                    	12-MAY-02       	SOCIAL                              100
+      1007 SHALINI                                    	12-MAY-01       	SOCIAL                              100
+
+13 rows selected.
+
+====================================================================================================================
+
+2.STUDENT_DETAILS_SRP
+
+BEGIN 
+FOR CR1 IN (SELECT REG_NO,STUD_NAME,DOB,SEX,TAMIL,ENGLISH,SCIENCE,MATHS,SOCIAL,
+RANK () OVER (ORDER BY (TAMIL+ENGLISH+MATHS+SCIENCE+SOCIAL) DESC) RANK,
+TAMIL+ENGLISH+MATHS+SCIENCE+SOCIAL "TOTAL" FROM STUD_SRINI )
+
+LOOP
+
+   IF CR1.TAMIL > 35 AND CR1.ENGLISH >35 AND  CR1.MATHS >35 AND CR1.SCIENCE >35 AND CR1.SOCIAL >35 THEN
+          INSERT INTO STUDENT_DETAILS_SRP VALUES(CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,CR1.SEX,CR1.TAMIL,
+	CR1.ENGLISH,CR1.MATHS,CR1.SCIENCE,CR1.SOCIAL,CR1.RANK,'PASS',CR1.TOTAL);
+   ELSE 
+         INSERT INTO STUDENT_DETAILS_SRP VALUES(CR1.REG_NO,CR1.STUD_NAME,CR1.DOB,CR1.SEX,CR1.TAMIL,
+	CR1.ENGLISH,CR1.MATHS,CR1.SCIENCE,CR1.SOCIAL,CR1.RANK,'FAIL',CR1.TOTAL);
+  END IF;
+
+END LOOP;
+
+END;
+
+OUTPUT:
+
+
+ REG_NO STUD_NAME                                     DOB             GENDER                              TAMIL    ENGLISH    SCIENCE      MATHS     SOCIAL       RANK RESULT                  TOTAL
+------- --------------------------------------------- --------------- ------------------------------ ---------- ---------- ---------- ---------- ---------- ---------- ------------------ ----------
+   1008 PRIYADARSHINI                                 16-JUN-02       FEMALE                                 99         99        100        100         99          1 PASS                      497
+   1009 AHMED                                         17-JUL-02       MALE                                   99        100        100         99         98          2 PASS                      496
+   1006 SANA                                          11-APR-02       FEMALE                                100         90        100        100         98          3 PASS                      488
+   1007 SHALINI                                       12-MAY-01       FEMALE                                 97         90        100         98        100          4 PASS                      485
+   1001 ANAND                                         15-FEB-01       MALE                                   95         95         97         96         98          5 PASS                      481
+   1010 SHARMILA                                      18-AUG-02       FEMALE                                100         89         98         96         90          6 PASS                      473
+   1004 MOHAN                                         11-AUG-02       MALE                                   98        100         87         98         88          7 PASS                      471
+   1005 THANISH                                       12-MAY-02       MALE                                   90         98         87         90        100          8 PASS                      465
+   1011 SUGUNA                                        15-AUG-02       FEMALE                                 97         89         97         90         89          9 PASS                      462
+   1003 SAHISH                                        10-SEP-02       MALE                                   98         90         87         95         88         10 PASS                      458
+   1002 VIDYASAGAR                                    20-MAR-02       MALE                                   92         91         86        100         77         11 PASS                      446
+   1013 SARAVANAN                                     17-JAN-01       MALE                                   70         76         89         67         77         12 PASS                      379
+   1012 PARVATHI                                      16-FEB-02       FEMALE                                 50         55         56         85         76         13 PASS                      322
+
+rows selected.
+
+
+

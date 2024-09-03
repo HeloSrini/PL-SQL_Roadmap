@@ -1,0 +1,90 @@
+CREATE OR REPLACE FUNCTION FUNC_SAMPLE
+(D_EMPNO  IN NUMBER)
+RETURN NUMBER
+AS
+E_NAME EMP_SAMPLE.ENAME%TYPE;
+
+BEGIN
+  SELECT ENAME 
+       INTO E_NAME
+       FROM EMP_SAMPLE
+       WHERE EMPNO=D_EMPNO;
+       RETURN E_NAME;
+END;                                                                                                                         
+/
+
+
+FUNCTION_SYNTAX:
+
+CREATE OR REPLACE FUNCTION <FUNCTION_NAME>
+(PARAMETER IF ANY)
+RETURN DATATYPE
+AS
+BEGIN
+   STATEMENT;
+END;
+/
+
+
+CREATE [OR REPLACE] FUNCTION function_name 
+   (parameter_1 [IN | OUT | IN OUT] datatype, 
+    parameter_2 [IN | OUT | IN OUT] datatype, 
+    ...
+   ) 
+   RETURN return_datatype 
+IS
+   -- Variable declarations
+BEGIN
+   -- Function logic
+   -- Return statement
+   RETURN value;
+EXCEPTION
+   -- Exception handling
+   WHEN exception_name THEN
+      -- Exception handling logic
+END function_name;
+
+PROCEDURE_SYNTAX
+
+CREATE [OR REPLACE] PROCEDURE procedure_name 
+   (parameter_1 [IN | OUT | IN OUT] datatype, 
+    parameter_2 [IN | OUT | IN OUT] datatype, 
+    ...
+   ) 
+IS
+   -- Variable declarations
+BEGIN
+   -- Procedure logic
+EXCEPTION
+   -- Exception handling
+   WHEN exception_name THEN
+      -- Exception handling logic
+END procedure_name;
+
+
+CREATE OR REPLACE FUNCTION calculate_square (n IN NUMBER)
+   RETURN NUMBER
+IS
+   result NUMBER;
+BEGIN
+   result := n * n;
+   RETURN result;
+END calculate_square;
+
+TRIGGER _ SYNTAX:
+
+CREATE [OR REPLACE] TRIGGER trigger_name
+   {BEFORE | AFTER | INSTEAD OF} 
+   {INSERT | UPDATE | DELETE}
+   [OF column_name]
+   ON table_name
+   [REFERENCING OLD AS old_name NEW AS new_name]
+   [FOR EACH ROW]
+   [WHEN (condition)]
+DECLARE
+   -- Variable declarations
+BEGIN
+   -- Trigger logic
+EXCEPTION
+   -- Exception handling (optional)
+END trigger_name;

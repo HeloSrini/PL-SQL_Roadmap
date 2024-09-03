@@ -1,0 +1,228 @@
+11. What will be the output of the following pl/sql block? Explain your answer
+
+NOTE: Table test contains 10 records.
+
+DECLARE
+CURSOR C1
+IS
+SELECT * FROM SURYA_DEPT;
+CR1 C1%ROWTYPE;
+V_CNT NUMBER := 0;
+BEGIN
+FOR CR1 IN C1
+LOOP
+FOR CR1 IN C1
+LOOP
+V_CNT := V_CNT + 1;
+DBMS_OUTPUT.PUT_LINE(V_CNT);
+END LOOP;
+END LOOP;
+END;
+
+OUTPUT:
+ORA-06511: PL/SQL: cursor already open
+  
+
+12. Which one is a correct syntax in the following piece of code?
+
+iii)  OPEN C1;
+      LOOP
+      FETCH C1 INTO CR1;
+      NULL;
+      EXIT WHEN C1%NOTFOUND;
+      END LOOP;
+      CLOSE C1;
+
+
+13. What will be the output of the following code.
+
+DECLARE
+  X NUMBER := 10;
+  Y NUMBER;
+BEGIN 
+  DBMS_OUTPUT.PUT_LINE(X+Y);
+END;
+
+OUTPUT:
+ IT WILL RETURN NULL
+
+
+14. Define the case statement with the proper example.
+
+ DECLARE
+    C VARCHAR(10) := '&C';
+    A NUMBER := &A;
+    B NUMBER := &B;
+ BEGIN
+    CASE C
+        WHEN 'ADD' THEN
+               DBMS_OUTPUT.PUT_LINE('ADDITIONS OF TOW NUMBER IS '||A+B);
+        WHEN 'MULT' THEN
+               DBMS_OUTPUT.PUT_LINE('MULTIPLE OF TOW NUMBER IS '||A*B);
+        ELSE
+               DBMS_OUTPUT.PUT_LINE('INVALIED NUMBER');
+     END CASE;
+ END;
+ 
+OUTPUT:
+Enter value for c: MULT
+old   2:    C VARCHAR(10) := '&C';
+new   2:    C VARCHAR(10) := 'MULT';
+Enter value for a: 2
+old   3:    A NUMBER := &A;
+new   3:    A NUMBER := 2;
+Enter value for b: 3
+old   4:    B NUMBER := &B;
+new   4:    B NUMBER := 3;
+MULTIPLE OF TOW NUMBER IS 6
+
+
+15. Write is if... ese statement with the proper example.
+
+DECLARE 
+  V NUMBER := &V;
+BEGIN 
+  IF MOD(V,2) = 0 THEN
+     DBMS_OUTPUT.PUT_LINE('EVEN');
+  ELSE
+     DBMS_OUTPUT.PUT_LINE('ODD');
+  END IF;
+END;
+
+OUTPUT:
+Enter value for v: 2
+old   2:   V NUMBER := &V;
+new   2:   V NUMBER := 2;
+EVEN
+
+
+16. Write a pl/sql block to find the given number is ODD or EVEN?
+
+DECLARE 
+  V NUMBER := &V;
+BEGIN 
+  IF MOD(V,2) = 0 THEN
+     DBMS_OUTPUT.PUT_LINE('EVEN');
+  ELSE
+     DBMS_OUTPUT.PUT_LINE('ODD');
+  END IF;
+END;
+
+OUTPUT:
+Enter value for v: 2
+old   2:   V NUMBER := &V;
+new   2:   V NUMBER := 2;
+EVEN
+
+
+17. Write a pl/sql block to insert the records from the table Employee to Employee temp. Delete all the
+records in Employee temp table before inserting it. 
+
+BEGIN
+  DELETE FROM SUR_EMPLOYEE_TEMP;
+  IF SQL%ROWCOUNT > 0 THEN
+      DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE DELETED BEFOR INSERT');
+  END IF;
+  INSERT INTO SUR_EMPLOYEE_TEMP (ET_BU, ET_PLANT, ET_ID, ET_NAME, ET_POS, ET_STATUS)
+  SELECT EMP_BU, EMP_PLANT, EMP_ID, EMP_NAME, EMP_POS, EMP_STATUS FROM SUR_EMP;
+  IF SQL%ROWCOUNT > 0 THEN
+      DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE INSERT');
+  END IF;
+END;
+
+OUTPUT:
+
+5 RECORDS ARE DELETED BEFOR INSERT
+5 RECORDS ARE INSERT
+
+
+18. Write a pl/sql block to insert the records from Employee table to Employee hist. 
+Update the emp status as 'M' after inserting into Employee hist table.
+
+ BEGIN
+   INSERT INTO SUR_EMPLOYEE_HIST (EH_BU, EH_PLANT, EH_ID, EH_NAME, EH_POS, EH_STATUS)
+   SELECT EMP_BU, EMP_PLANT, EMP_ID, EMP_NAME, EMP_POS, EMP_STATUS FROM SUR_EMP;
+   IF SQL%ROWCOUNT > 0 THEN
+       DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE INSERT');
+   END IF;
+   UPDATE SUR_EMP SET EMP_STATUS = 'M';
+   IF SQL%ROWCOUNT > 0 THEN
+       DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE UPDATED IN SUR_EMP 
+                              TABLE AFTER INSERTING SUR_EMPLOYEE_HIST TABLE');
+   END IF; 
+ END;
+
+OUTPUT:
+
+5 RECORDS ARE INSERT
+5 RECORDS ARE UPDATED IN SUR_EMP TABLE AFTER INSERTING SUR_EMPLOYEE_HIST TABLE
+
+
+19. Write a pl/sql block to print the particular employee's salary (Use Paramaterized cursor)
+ 
+DECLARE
+    CURSOR EMP1(POS VARCHAR)
+    IS
+    SELECT * FROM SUR_EMP WHERE EMP_POS = POS;
+    EMP2 EMP1%ROWTYPE;
+    CURSOR SAL1(POS2 VARCHAR := '&POS2')
+    IS 
+    SELECT * FROM SUR_SALARY WHERE POSITION = POS2;
+    SAL2 SAL1%ROWTYPE;
+BEGIN 
+     OPEN SAL1;
+     LOOP
+       FETCH SAL1 INTO SAL2;
+       EXIT WHEN SAL1%NOTFOUND;
+       		DBMS_OUTPUT.PUT_LINE('EMPLOYSEE SALARY --> '||SAL2.SALARY);
+       OPEN EMP1(SAL2.POSITION);
+       LOOP
+       FETCH EMP1 INTO EMP2;
+       EXIT WHEN EMP1%NOTFOUND;
+               DBMS_OUTPUT.PUT_LINE(EMP2.EMP_ID||' --> '||EMP2.EMP_NAME);
+       END LOOP;
+       CLOSE EMP1;
+       END LOOP;
+     CLOSE SAL1;
+END;
+
+OUTPUT:
+
+Enter value for pos2: MANAGER
+old   6:     CURSOR SAL1(POS2 VARCHAR := '&POS2')
+new   6:     CURSOR SAL1(POS2 VARCHAR := 'MANAGER')
+EMPLOYSEE SALARY --> 45000
+1001 --> SARAN
+
+
+20. Write a pl/sql block to insert the records from SUPLR PRODUCTS table to SUPLR PROD TEMP table. 
+Note: Seq no is NULL in supir products table, Ako insert seq no into suplr_prod_temp while inserting it.
+
+ BEGIN
+    INSERT INTO SUR_SUPLR_PROD_TEMP(SPT_BU, SPT_SUPLR_ID, SPT_PROD_ID, SPT_PROD_REV,
+                                    SPT_UOM, SPT_TCF_ID, SPT_SEQ_NO)
+    SELECT SUP_BU, SUP_SUPLR_ID, SUP_PROD_ID, SUP_PROD_REV, SUP_UOM, SUP_TCF_ID, NULL FROM SUR_SUPLR
+    IF SQL%ROWCOUNT > 0 THEN
+        DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE INSERT');
+    END IF;
+  END;
+
+OUTPUT:
+
+4 RECORDS ARE INSERT
+
+
+21. Write a pl/sql block to insert the records from products table to prod temp. 
+Eliminate the duplicate rows and insert the records.
+
+ BEGIN
+    INSERT INTO SUR_PROD_TEMP
+    SELECT  DISTINCT * FROM SUR_PRODUCTS; 
+    IF SQL%ROWCOUNT > 0 THEN
+        DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT||' RECORDS ARE INSERT');
+    END IF;
+  END;
+
+OUTPUT:
+
+3 RECORDS ARE INSERT

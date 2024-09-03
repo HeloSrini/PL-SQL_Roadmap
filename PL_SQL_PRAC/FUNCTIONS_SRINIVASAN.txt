@@ -1,0 +1,317 @@
+1.PL/SQL Function to Retrieve Job Based on Department.
+
+CREATE OR REPLACE FUNCTION FIND_A_JOB (D_EMPNO IN NUMBER)
+RETURN NUMBER
+AS
+   V_JOB EMP_SAMPLE.JOB%TYPE;
+BEGIN
+   SELECT JOB
+   INTO V_JOB
+   FROM EMP_SAMPLE
+   WHERE EMPNO = D_EMPNO;
+   
+   RETURN V_JOB;
+END;
+/
+
+Function created.
+
+
+OUTPUT:
+
+DECLARE
+V_EMPNO NUMBER:=7369
+V_JOB EMP_SAMPLE.JOB%TYPE;
+
+BEGIN
+  V_JOB:=FIND_A_JOB(V_EMPNO);
+  DBMS_OUTPUT.PUT_LINE('The job of employee ' || v_empno || ' is: ' || v_job);
+END;
+/
+
+==============================================================================================================
+
+2.PL/SQL Function to Retrieve Employee Details Based on Department.
+
+CREATE OR REPLACE FUNCTION FUNC_SAMPLE
+(D_EMPNO  IN NUMBER)
+RETURN VARCHAR2
+AS
+E_NAME EMP_SAMPLE.ENAME%TYPE;
+
+BEGIN
+  SELECT ENAME 
+       INTO E_NAME
+       FROM EMP_SAMPLE
+       WHERE EMPNO=D_EMPNO;
+RETURN E_NAME;
+END;
+/
+
+Function created.
+
+
+==============================================================================================================
+3.PL/SQL Function to Retrieve Job With Exception Handling:
+
+CREATE OR REPLACE FUNCTION FIND_A_JOB (D_EMPNO IN NUMBER) 
+RETURN VARCHAR2
+AS
+    V_JOB EMP_SAMPLE.JOB%TYPE;
+
+BEGIN
+    SELECT JOB
+    INTO V_JOB
+    FROM EMP_SAMPLE
+    WHERE EMPNO = D_EMPNO;
+ RETURN V_JOB;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'Job Not Founded in a Emp_Sample Table';    
+END;
+/
+
+Function created.
+
+==============================================================================================================
+
+4.PL/SQL Function to Add a Two Numbers:
+
+CREATE OR REPLACE FUNCTION Adder
+(n1 IN number,
+n2 IN number)
+RETURN number
+IS
+n3 number(5);
+BEGIN
+n3:=n1+n2;
+RETURN n3;
+END;
+
+Function created.
+
+DECLARE
+n3 Number(4);
+BEGIN
+n3:=Adder(20,20);
+dbms_output.put_line('Addition of Two Number Is:' || n3);
+END;
+/
+
+Addition of Two Number Is :40
+
+PL/SQL procedure successfully completed.
+
+==============================================================================================================
+5. PL/SQL Function to Insert a Records from Emp_Sample Table.
+
+CREATE OR REPLACE FUNCTION Insert_Rec_Employees
+(
+    p_empno   IN  NUMBER,
+    p_ename   IN  VARCHAR2,
+    p_job     IN  VARCHAR2,
+    p_date    IN  DATE
+)
+RETURN VARCHAR2
+AS
+BEGIN
+    INSERT INTO Emp_Sample(empno, ename, job, hiredate)
+    VALUES (p_empno, p_ename, p_job, p_date);
+
+    RETURN 'Records Inserted Successfully..!';
+
+END;
+/
+
+Function created.
+
+To Execute a Fuction:
+
+DECLARE
+    res VARCHAR2(100);
+BEGIN
+    res := Insert_Rec_Employees (1234, 'Srinivasan', 'Trainee', TO_DATE('10-06-2024','DD-MM-YY'));
+    DBMS_OUTPUT.PUT_LINE(res);
+END;
+/
+
+Output:
+
+  1234            Srinivasan                     Trainee                                10-JUN-24
+==============================================================================================================
+6. PL/SQL Function to Delete a Records from Emp_Sample Table.
+
+CREATE OR REPLACE FUNCTION Delete_Record
+(p_empno IN NUMBER) 
+RETURN VARCHAR2
+AS
+BEGIN
+    DELETE FROM Emp_Sample
+    WHERE Empno = p_empno;
+    
+    IF SQL%ROWCOUNT = 0 THEN
+        RETURN 'No Records found with the given Empno';
+    ELSE
+        RETURN 'Records Deleted Successfully..!';
+    END IF;
+    
+END;
+/
+
+Function created.
+
+Execution:
+
+DECLARE
+    Res VARCHAR2(100); 
+BEGIN 
+    Res := Delete_Record(7876);  
+    DBMS_OUTPUT.PUT_LINE(Res);
+END;
+/
+
+Output:
+Records Deleted Successfully..!
+
+PL/SQL procedure successfully completed.
+
+==============================================================================================================
+7.Zero_Divide_Exception
+
+CREATE OR REPLACE FUNCTION ZERO_EXCEPTION 
+(A NUMBER,
+  B NUMBER) 
+RETURN NUMBER
+IS
+    RES NUMBER;
+BEGIN
+    RES := A / B;
+    RETURN RES;
+  
+EXCEPTION
+    WHEN ZERO_DIVIDE THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Division by zero');
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);  
+END;
+/
+
+Function created.
+
+BEGIN
+  Res_lt=ZERO_EXCEPTION(RES);
+  DBMS_OUTPUT.PUT_LINE(Res_lt);
+END;
+
+Exec:
+
+DECLARE
+   result NUMBER;
+BEGIN
+   result := ZERO_EXCEPT(10, 0);  
+   DBMS_OUTPUT.PUT_LINE('Result: ' || result);  
+END;
+/
+
+Output:
+
+Error: Division by zero
+DECLARE
+*
+ERROR at line 1:
+ORA-06503: PL/SQL: Function returned without value
+ORA-06512: at "TRAINEE.ZERO_EXCEPT", line 16
+ORA-06512: at line 4
+
+==============================================================================================================
+Errors Faced During Practices:
+     
+1. Error : Function Created with Compilation Errors.
+2. Error : No_data Found Exception
+3.During Execution Without Return Type: Function Created 
+
+SQL> CREATE OR REPLACE FUNCTION FIND_A_JOB (D_EMPNO IN NUMBER)
+  2  RETURN NUMBER
+  3  AS
+  4     V_JOB EMP_SAMPLE.JOB%TYPE;
+  5  BEGIN
+  6     SELECT JOB
+  7     INTO V_JOB
+  8     FROM EMP_SAMPLE
+  9     WHERE EMPNO = D_EMPNO;
+ 10     
+ 11     
+ 12  END;
+ 13  /
+
+Function created.
+
+Error: Function Returned with 
+
+Select 
+
+4.During Execution With Return Type: Function Created 
+
+SQL> CREATE OR REPLACE FUNCTION FIND_A_JOB (D_EMPNO IN NUMBER)
+  2  RETURN NUMBER
+  3  AS
+  4     V_JOB EMP_SAMPLE.JOB%TYPE;
+  5  BEGIN
+  6     SELECT JOB
+  7     INTO V_JOB
+  8     FROM EMP_SAMPLE
+  9     WHERE EMPNO = D_EMPNO;
+ 10     
+ 11     RETURN V_JOB;
+ 12  END;
+ 13  /
+
+Function created.
+
+
+To Find a Employee_Name With Specific Employee_id
+
+CREATE OR REPLACE FUNCTION FIND_A_EMPNAME (D_EMPNO IN NUMBER)
+RETURN VARCHAR2(10)
+AS
+   E_NAME EMP_SAMPLE.ENAME%TYPE;
+BEGIN
+   SELECT ENAME
+   INTO E_NAME
+   FROM EMP_SAMPLE
+   WHERE EMPNO = D_EMPNO;
+   
+   RETURN E_NAME;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'Employee Name not Founded in a Emp_Sample Table';    
+END;
+/
+
+
+DECLARE
+    Result VARCHAR2(20);
+BEGIN
+   Result := FIND_A_EMPNAME(7876);
+   DBMS_OUTPUT.PUT_LINE(Result);
+END;
+
+EXEC FIND_A_EMPNAME  ('7876');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

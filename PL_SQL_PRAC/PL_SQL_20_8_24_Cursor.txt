@@ -1,0 +1,355 @@
+DECLARE TO EXECUTE A CURSORS
+
+1.DECLARE A CURSORS
+2.OPEN THE CURSORS
+3.FETCH THE CURSORS
+4.CLOSE THE CURSORS
+___________________________________________________________________________________________________
+CURSOR ATTRIBUTES
+
+1.C1%FOUND                                                                     
+2.C1%NOTFOUND      -  EXPLICIT 
+3.C1%ISOPEN
+4.C1%ROWCOUNT
+
+1.SQL%FOUND                                                                     
+2.SQL%NOTFOUND    -  IMPLICIT
+3.SQL%ISOPEN
+4.SQL%ROWCOUNT
+_____________________________________________________________________________________________________
+1.CURSOR WITH PARAMETERS
+
+DECLARE
+    CURSOR  C1 (p_deptno NUMBER)
+    IS
+    SELECT * FROM EMP_HP
+    WHERE EMP_DEPT = p_deptno ;
+ 
+    Cr1  C1%ROWTYPE;
+
+BEGIN
+   OPEN C1(57);
+   LOOP
+         FETCH C1 INTO Cr1;
+         EXIT WHEN C1%NOTFOUND;
+         DBMS_OUTPUT.PUT_LINE(Cr1.EMP_DEPT || '-->' || Cr1.EMP_FNAME);
+   END LOOP;
+   CLOSE C1;
+END;
+/
+
+OP
+
+57-->Michale
+57-->Enric
+57-->Kuleswar
+57-->Alex
+57-->Maria
+
+PL/SQL procedure successfully completed.
+_____________________________________________________________________________________________________
+2.CURSOR WITH PARAMETERS
+
+DECLARE
+    CURSOR  C1 (p_deptno NUMBER)
+    IS   
+    SELECT * FROM EMP_HP
+    EMP_DEPT = p_deptno;
+    Cr1  C1%ROWTYPE;
+
+BEGIN
+   OPEN C1(57);
+   LOOP
+         FETCH C1 INTO Cr1;
+         EXIT WHEN C1%NOTFOUND;
+         DBMS_OUTPUT.PUT_LINE(Cr1.EMP_DEPT || '-->' || Cr1.EMP_FNAME);
+   END LOOP;
+   CLOSE C1;
+  
+  OPEN C1(47);
+   LOOP
+         FETCH C1 INTO Cr1;
+         EXIT WHEN C1%NOTFOUND;
+         DBMS_OUTPUT.PUT_LINE(Cr1.EMP_DEPT || '-->' || Cr1.EMP_FNAME);
+   END LOOP;
+   CLOSE C1;
+END;
+/
+
+OP
+
+57-->Michale
+57-->Enric
+57-->Kuleswar
+57-->Alex
+57-->Maria
+47-->Joseph
+47-->Zanifer
+47-->Henrey
+
+PL/SQL procedure successfully completed.
+_____________________________________________________________________________________________________
+
+3.CURSOR WITH MORE THAN ONE_PARAMETERS
+
+DECLARE
+    CURSOR C1 (p_deptno NUMBER, 
+	         p_lname VARCHAR2) 
+    IS
+    SELECT * 
+    FROM EMP_HP
+    WHERE EMP_DEPT = p_deptno AND 
+    EMP_FNAME = p_lname;
+
+    Cr1  C1%ROWTYPE;
+
+BEGIN
+    OPEN C1(57, 'Michale');
+
+    LOOP
+        FETCH C1 INTO Cr1;
+        EXIT WHEN C1%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(Cr1.EMP_DEPT || '-->' || Cr1.EMP_FNAME);
+    END LOOP;
+    CLOSE C1;
+END;
+/
+
+OP
+
+57-->Michale
+
+PL/SQL procedure successfully completed.
+_____________________________________________________________________________________________________
+4.CURSORS USING FOR LOOP 
+
+DECLARE
+   CURSOR C1 (p_deptno NUMBER)
+   IS
+   SELECT * FROM EMP_SAMPLE
+   WHERE  deptno = p_deptno;
+   
+   Cr1  C1%ROWTYPE;
+
+BEGIN
+   FOR Cr1 IN C1(10)
+   LOOP
+      DBMS_OUTPUT.PUT_LINE(Cr1.deptno || '--->' || Cr1.ename);
+   END LOOP;
+  
+   FOR Cr1 IN C1(20)
+   LOOP
+      DBMS_OUTPUT.PUT_LINE(Cr1.deptno || '--->' || Cr1.ename);
+   END LOOP;
+END;
+/
+
+OP
+
+10--->KING
+10--->CLARK
+10--->MILLER
+20--->JONES
+20--->SCOTT
+20--->FORD
+20--->SMITH
+20--->ADAMS
+
+PL/SQL procedure successfully completed.
+
+_____________________________________________________________________________________________________
+
+5.USING_CURSOR ATTRIBUTES
+
+%ROWCOUNT - USING A POINTER VARIABLE
+
+DECLARE
+      CURSOR C1
+      IS
+      SELECT * FROM EMP_SAMPLE;
+      CR1  C1%ROWTYPE;
+
+BEGIN
+   FOR Cr1 IN C1
+   LOOP
+        DBMS_OUTPUT.PUT_LINE('RowCount:'  || C1%ROWCOUNT);
+        DBMS_OUTPUT.PUT_LINE(Cr1.deptno || '--->' || Cr1.ename);
+   END LOOP;
+END;
+/
+
+OP
+
+RowCount:1
+10--->KING
+RowCount:2
+30--->BLAKE
+RowCount:3
+10--->CLARK
+RowCount:4
+20--->JONES
+RowCount:5
+20--->SCOTT
+RowCount:6
+20--->FORD
+RowCount:7
+20--->SMITH
+RowCount:8
+30--->ALLEN
+RowCount:9
+30--->WARD
+RowCount:10
+30--->MARTIN
+RowCount:11
+30--->TURNER
+RowCount:12
+20--->ADAMS
+RowCount:13
+30--->JAMES
+RowCount:14
+10--->MILLER
+
+PL/SQL procedure successfully completed.
+
+_____________________________________________________________________________________________________
+SQL%ROWCOUNT
+
+BEGIN
+   UPDATE Emp_sample
+   SET new_sal = new_sal + (new_sal * (5/100))
+   WHERE deptno = 10;
+   
+   DBMS_OUTPUT.PUT_LINE('Updated Records : ' || SQL%ROWCOUNT);
+END;
+/
+_____________________________________________________________________________________________________
+CURSOR USING A UPDATE
+ 
+BEGIN
+   UPDATE Emp_sample
+   SET new_sal = new_sal + (new_sal * (5/100))
+   WHERE deptno = 10;
+
+   DBMS_OUTPUT.PUT_LINE('Updated Records : ' || SQL%ROWCOUNT);
+
+  IF SQL%FOUND THEN 
+        DBMS_OUTPUT.PUT_LINE('Records Found..');
+  END IF;
+  
+  IF SQL%NOTFOUND THEN 
+       DBMS_OUTPUT.PUT_LINE('Records NotFound..');
+  END IF;
+  
+  IF SQL%ISOPEN THEN
+       DBMS_OUTPUT.PUT_LINE('Cursor is Opens');
+  END IF;
+END;          
+/
+_____________________________________________________________________________________________________
+USING A MULTIPLE CURSORS
+
+DECLARE
+   CURSOR C1 (p_deptno NUMBER)
+   IS
+   SELECT * FROM EMP_SAMPLE
+   WHERE deptno = p_deptno;
+   
+   CURSOR C2 (p_job VARCHAR2)
+   IS
+   SELECT * FROM EMP_SAMPLE
+   WHERE job = p_job;
+
+   Cr1 C1%ROWTYPE;
+   Cr2 C2%ROWTYPE;
+
+BEGIN
+
+   OPEN C1(10);
+   LOOP
+        FETCH C1 INTO Cr1;
+        EXIT WHEN C1%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(Cr1.deptno || ' ---> ' || Cr1.ename);
+   END LOOP;
+   
+   /*
+   OPEN C1(20);
+   LOOP
+        FETCH C1 INTO Cr1;
+        EXIT WHEN C1%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(Cr1.deptno || ' ---> ' || Cr1.ename);
+   END LOOP;
+   CLOSE C1;
+  */
+   
+   /*
+   OPEN C2('ANALYST');
+   LOOP
+        FETCH C2 INTO Cr2;
+        EXIT WHEN C2%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(Cr2.job || ' ---> ' || Cr2.ename);
+   END LOOP;
+    CLOSE C1;
+   */
+
+   OPEN C2('MANAGER');
+   LOOP
+        FETCH C2 INTO Cr2;
+        EXIT WHEN C2%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(Cr2.job || ' ---> ' || Cr2.ename);
+   END LOOP;
+   CLOSE C2;
+
+END;
+/
+___________________________________________________________________________________________________________________
+
+DECLARE
+   CURSOR C1 (p_deptno NUMBER)
+   IS
+   SELECT * FROM EMP_SAMPLE
+   WHERE deptno = p_deptno;
+   
+   CURSOR C2 (p_job VARCHAR2)
+   IS
+   SELECT * FROM EMP_SAMPLE
+   WHERE job = p_job;
+
+   Cr1 C1%ROWTYPE;
+   Cr2 C2%ROWTYPE;
+
+BEGIN
+
+ FOR Cr1 IN C1(10)    -- CURSOR 1
+   LOOP
+      DBMS_OUTPUT.PUT_LINE(Cr1.deptno || ' ---> ' || Cr1.ename);
+   END LOOP;
+ 
+   FOR Cr2 IN C2('MANAGER')    -- CURSOR 2
+   LOOP
+      DBMS_OUTPUT.PUT_LINE(Cr2.job || ' ---> ' || Cr2.ename);
+   END LOOP;
+
+END;
+/
+
+_____________________________________________________________________________________________________
+
+QUIZ QNS 
+FETCH cursor_name INTO variable_list;
+
+explanation: The basic unit in PL/SQL is a block. A block has the following structure –
+DECLARE – declaration statements
+BEGIN – executable statements
+EXCEPTIONS – exception handling statements
+END
+
+
+1. Which of the following is not a category of datatype in PL/SQL?
+a) Scalar
+b) Vector
+c) Composite
+d) Reference
+View Answer
+
+Answer: b
+Explanation: In PL/SQL, there are four main categories of datatypes – Scalar, LOB, Composite, Reference.

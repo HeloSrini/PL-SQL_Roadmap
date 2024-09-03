@@ -1,0 +1,279 @@
+1.
+EXPLICIT CURSOR
+
+DECLARE
+	CURSOR c1
+	IS
+	SELECT * FROM emp_srini;
+
+	cr1  c1 %ROWTYPE;
+
+BEGIN
+	OPEN c1;
+	LOOP
+	FETCH c1 INTO cr1;
+	EXIT WHEN c1 %NOTFOUND;
+	DBMS_OUTPUT.PUT_LINE('Employee: ' || cr1.emp_name);
+	DBMS_OUTPUT.PUT_LINE('Salary: ' || cr1.gender);
+ 	DBMS_OUTPUT.PUT_LINE('Dob: ' || cr1.dob);
+	DBMS_OUTPUT.PUT_LINE('Designation:' || cr1.DESIGNATION);
+	DBMS_OUTPUT.PUT_LINE('------------------------------------');
+	END LOOP;
+	CLOSE c1;
+END;
+/ 
+
+__________________________________________________________________________________________________________________________
+EXPLICIT CURSOR - FOR LOOP
+
+BEGIN
+    FOR cr1 IN (SELECT * FROM emp_srini)
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('Employee_name :' || cr1.emp_name);
+        DBMS_OUTPUT.PUT_LINE('Dept_id :' || cr1.dept_id);
+        DBMS_OUTPUT.PUT_LINE('dob:' || cr1.dob);
+        DBMS_OUTPUT.PUT_LINE('DESIGNATION :' || cr1.designation);
+        DBMS_OUTPUT.PUT_LINE('------------------------------------');
+    END LOOP;
+END;
+/        
+
+__________________________________________________________________________________________________________________________
+CURSOR USING JOINS
+
+CUSTOMER
+
+CREATE TABLE C_SRINI(
+CUST_ID   VARCHAR2(10),
+CUST_NAME  VARCHAR2(10),
+CUST_CITY     VARCHAR2(10)
+);
+
+INSERT INTO C_SRINI VALUES ('C01','PRAKASH','CHENNAI');
+INSERT INTO C_SRINI VALUES ('C02','ARUN','CBT');
+INSERT INTO C_SRINI VALUES ('C03','SRINI','CHENNAI');
+
+SQL> SELECT * FROM C_SRINI;
+
+CUST_ID                        CUST_NAME                      CUST_CITY
+------------------------------ ------------------------------ ------------------------------
+C02                            ARUN                           CBT
+C03                            SRINI                          CHENNAI
+C01                            PRAKASH                        CHENNAI
+
+SQL> SELECT * FROM CUST_DETAILS;
+
+CUST_ID                                                      CUST_ADDRESS                                                    CUST_PH
+------------------------------------------------------------ ------------------------------------------------------------ ----------
+C01                                                          PATEL ST                                                     9150233017
+C02                                                          RAJE ST                                                      9150233532
+C03                                                          SAM ST                                                       9150233231
+
+__________________________________________________________________________________________________________________________
+
+DECLARE 
+   CURSOR  C1 IS
+   SELECT CUST_NAME,CUST_ADDRESS,CUST_PH FROM C_SRINI A,CUST_DETAILS B
+   WHERE A.CUST_ID=B.CUST_ID AND A.CUST_ID='C01';
+   CR1 C1%ROWTYPE;
+
+BEGIN
+  OPEN C1;
+  FETCH C1 INTO CR1;
+  CLOSE C1;	
+/
+
+__________________________________________________________________________________________________________________________
+
+CURSOR USING A INSERT AND UPDATE
+
+INSERT
+---------
+
+DECLARE
+    CURSOR c1 IS
+        SELECT * FROM emp_srini;
+
+     cr1 c1%ROWTYPE;
+
+BEGIN
+    OPEN c1;
+    LOOP
+        FETCH c1 INTO cr1;
+        EXIT WHEN c1%NOTFOUND;   
+      
+        INSERT INTO emp_srini (empid, emp_name, gender, dob, designation)
+        VALUES (cr1.empid, cr1.emp_name, cr1.gender, cr1.dob, cr1.designation);
+         
+    END LOOP;
+    CLOSE c1;
+   
+END;
+/
+__________________________________________________________________________________________________________________________
+1.  Simple Cursor to Fetch and Display Employee Details
+
+DECLARE
+   CURSOR EMP_CUR 
+   IS 
+   SELECT *
+   FROM EMP_SRINI 
+   WHERE DEPT_ID = 120;
+  
+   cr1  EMP_CUR %ROWTYPE;
+
+BEGIN
+   OPEN EMP_CUR;
+   LOOP
+      FETCH EMP_CUR INTO cr1;
+      EXIT WHEN EMP_CUR%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('ID:' || cr1.EMPID || ' NAME:' || cr1.EMP_NAME || ' SALARY:' || cr1.BASIC_SAL || ' DATE:' || cr1.DOB);
+   END LOOP;
+   CLOSE EMP_CUR;
+END;
+/
+__________________________________________________________________________________________________________________________
+2.Update Records Using Cursor
+
+DECLARE
+   CURSOR EMP_CUR
+   IS
+   SELECT * FROM EMP_SRINI
+   WHERE DEPT_ID=120;
+
+  cr1 EMP_CUR%ROWTYPE;
+
+BEGIN
+  OPEN EMP_CUR;
+          LOOP
+  	FETCH EMP_CUR INTO cr1;
+  	EXIT WHEN EMP_CUR%NOTFOUND;
+  	UPDATE EMP_SRINI SET BASIC_SAL = BASIC_SAL * 1;
+          END LOOP;
+  CLOSE EMP_CUR;
+END;
+/
+
+__________________________________________________________________________________________________________________________
+3. Delete Records Using Cursor
+
+DECLARE
+   CURSOR EMP_CUR 
+   IS
+   SELECT * FROM EMP_SRINI;
+  
+    cr1 EMP_CUR%ROWTYPE;
+  
+BEGIN
+   OPEN EMP_CUR;
+          LOOP 
+                FETCH EMP_CUR INTO cr1;
+                EXIT WHEN EMP_CUR%NOTFOUND;
+                DELETE FROM EMP_SRINI WHERE DEPT_ID =120;
+         END LOOP;
+   CLOSE EMP_CUR;
+END;
+/
+
+__________________________________________________________________________________________________________________________
+4. Cursor with Aggregate Function
+
+DECLARE
+   CURSOR EMP_CUR
+   IS 
+   SELECT EMPID, COUNT(*) AS EMP_COUNT 
+   FROM EMP_SRINI
+   GROUP BY EMPID;
+
+   cr1 EMP_CUR%ROWTYPE;
+
+BEGIN
+   OPEN EMP_CUR;
+   LOOP
+         FETCH EMP_CUR INTO cr1;
+         EXIT WHEN EMP_CUR%NOTFOUND;
+         DBMS_OUTPUT.PUT_LINE('NUM: ' || cr1.EMPID || ' COUNT: ' || cr1.EMP_COUNT);
+   END LOOP;
+   CLOSE EMP_CUR;
+END;
+/
+
+__________________________________________________________________________________________________________________________
+5.Cursor with Exception Handling
+
+DECLARE
+   CURSOR C1 
+   IS
+   SELECT * FROM EMP_SRINI;
+  
+   cr1 C1%ROWTYPE;
+
+BEGIN
+   OPEN C1;
+   LOOP
+	 FETCH C1 INTO cr1;
+	 EXIT WHEN C1%NOTFOUND;
+                   BEGIN
+	        UPDATE EMP_SRINI 
+	        SET BASIC_SAL = BASIC_SAL * 10 WHERE DEPT_ID=120;
+                   EXCEPTION
+	        WHEN OTHERS THEN
+		DBMS_OUTPUT.PUT_LINE('Error Updating Employee' || cr1.DEPT_ID || ': ' ||SQLLERM);
+                  END;
+   END LOOP;
+   CLOSE C1;
+END;
+/
+
+__________________________________________________________________________________________________________________________
+6.INSERT USING A CURSORS
+
+DECLARE
+   CURSOR C1 
+   IS
+   SELECT * FROM EMP_SRINI
+   WHERE DEPT_ID = 120;
+
+   cr1 C1%ROWTYPE;
+
+BEGIN
+   OPEN C1; 
+   LOOP
+      FETCH C1 INTO cr1;
+      EXIT WHEN C1%NOTFOUND;     
+      INSERT INTO EMP_SAMPLE (EMPID, EMP_NAME, DOB, BASIC_SAL, DEPT_NO)
+      VALUES (cr1.EMPID, cr1.EMP_NAME, cr1.DOB, cr1.BASIC_SAL, cr1.DEPT_NO); 
+   END LOOP;
+   CLOSE C1;
+END;
+/
+__________________________________________________________________________________________________________________________
+
+7. UPDATE USING STATUS
+
+DECLARE
+    CURSOR c1 IS
+        SELECT * FROM LUQ_STUDENT;
+     cr1 c1%ROWTYPE;
+BEGIN
+    OPEN c1;
+    LOOP
+        FETCH c1 INTO cr1;
+        EXIT WHEN c1%NOTFOUND;
+       UPDATE LUQ_STUDENT
+          SET STATUS = 'A'  WHERE TOTAL BETWEEN 480 AND 500;
+      UPDATE LUQ_STUDENT
+         SET STATUS = 'B'  WHERE TOTAL < 480 ;
+    END LOOP;
+    CLOSE c1;
+END;
+__________________________________________________________________________________________________________________________
+
+
+
+         
+
+
+                
+  
+         

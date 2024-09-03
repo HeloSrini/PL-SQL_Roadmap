@@ -1,0 +1,83 @@
+USING IN_OUT PARAMETER.
+
+CREATE OR REPLACE PROCEDURE FORMAT_PH_NO
+(P_NUM IN OUT VARCHAR2)
+IS
+BEGIN
+    P_NUM := '(' || SUBSTR(P_NUM, 1, 3) || ')' ||
+                          SUBSTR(P_NUM, 4, 3) || '-' ||
+                          SUBSTR(P_NUM, 7);
+END;
+/
+
+
+
+SQL> CREATE OR REPLACE PROCEDURE FORMAT_PH_NO
+  2  (P_NUM IN OUT VARCHAR2)
+  3  IS
+  4  BEGIN
+  5      P_NUM := '(' || SUBSTR(P_NUM, 1, 3) || ')' ||
+  6                            SUBSTR(P_NUM, 4, 3) || '-' ||
+  7                            SUBSTR(P_NUM, 7);
+  8  END;
+  9  /
+
+Procedure created.
+
+SQL> DECLARE
+  2     P_DNO VARCHAR2(12);
+  3  BEGIN
+  4     P_DNO:='1234567890';
+  5     FORMAT_PH_NO(P_DNO);
+  6     DBMS_OUTPUT.PUT_LINE(P_DNO);
+  7  END;
+  8  /
+DECLARE
+*
+ERROR at line 1:
+ORA-06502: PL/SQL: numeric or value error: character string buffer too small
+ORA-06512: at "TRAINEE.FORMAT_PH_NO", line 5
+ORA-06512: at line 5
+
+
+SQL> DECLARE
+  2     P_DNO VARCHAR2(25);
+  3  BEGIN
+  4     P_DNO:='1234567890';
+  5     FORMAT_PH_NO(P_DNO);
+  6     DBMS_OUTPUT.PUT_LINE(P_DNO);
+  7  END;
+  8  /
+(123)456-7890
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+
+SELECT '(' || SUBSTR('1234567890', 1, 3) || ')' ||
+             SUBSTR('1234567890', 4, 3) || '-' ||
+             SUBSTR('1234567890', 7) FROM DUAL;
+
+
+
+
+
+DECLARE
+   P_DNO VARCHAR2(12);
+BEGIN
+   P_DNO:='1234567890';
+   FORMAT_PH_NO(P_DNO);
+   DBMS_OUTPUT.PUT_LINE(P_DNO);
+END;
+/
+
+
+
+
+
+
+
+
+
+
+

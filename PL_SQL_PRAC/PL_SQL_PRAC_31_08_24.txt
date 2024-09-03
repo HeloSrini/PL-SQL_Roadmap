@@ -1,0 +1,151 @@
+Procedures:
+
+In PL/SQL, a procedure is a subprogram that performs a specific task or action. 
+Unlike functions, procedures do not return a value directly to the calling program,
+ though they can modify data or output information via OUT parameters.
+
+Functions
+
+n PL/SQL, a function is a subprogram that performs a specific computation or task
+and returns a single value to the caller. Functions are similar to procedures, 
+but they are designed to return a value and can be used in SQL statements, 
+PL/SQL expressions, or even in other functions and procedures.
+
+Triggers
+
+
+In PL/SQL, a trigger is a stored procedure that is automatically executed (or "triggered") when certain events occur in the database,
+ such as inserting, updating, or deleting a row in a table. Triggers are often used to enforce business rules, 
+maintain data integrity, or synchronize tables
+
+
+
+56.
+CREATE OR REPLACE PROCEDURE print_employee_details(
+    p_empno IN NUMBER
+)
+IS
+    v_first_name  EMPLOYEES.FIRST_NAME%TYPE;
+    v_second_name EMPLOYEES.SECOND_NAME%TYPE;
+    v_department  EMPLOYEES.DEPARTMENT%TYPE;
+    v_salary      EMPLOYEES.SALARY%TYPE;
+BEGIN
+    -- Fetch employee details
+    SELECT FIRST_NAME, SECOND_NAME, DEPARTMENT, SALARY
+    INTO v_first_name, v_second_name, v_department, v_salary
+    FROM EMPLOYEES
+    WHERE EMPNO = p_empno;
+
+    -- Print the employee details
+    DBMS_OUTPUT.PUT_LINE('Employee Number: ' || p_empno);
+    DBMS_OUTPUT.PUT_LINE('First Name: ' || v_first_name);
+    DBMS_OUTPUT.PUT_LINE('Second Name: ' || v_second_name);
+    DBMS_OUTPUT.PUT_LINE('Department: ' || v_department);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || v_salary);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employee found with EMPNO ' || p_empno);
+    WHEN TOO_MANY_ROWS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Multiple employees found with EMPNO ' || p_empno || '. Please check the data.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
+
+
+57.
+DECLARE
+    CURSOR c_update_departments IS
+        SELECT empno, new_department
+        FROM hr_positions;
+
+    v_empno          emp_active_info.empno%TYPE;
+    v_new_department hr_positions.new_department%TYPE;
+
+BEGIN    
+    FOR rec IN c_update_departments 
+LOOP
+        v_empno := rec.empno;
+        v_new_department := rec.new_department;
+
+        UPDATE emp_active_info
+        SET department = v_new_department
+        WHERE empno = v_empno;
+
+        DBMS_OUTPUT.PUT_LINE('Updated department for EMPNO ' || v_empno || ' to ' || v_new_department);
+    END LOOP;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+
+58.
+Drop Procedure Proced_Name;
+
+From an Anonymous PL/SQL Block: If you're running SQL in an environment like SQL*Plus, SQL Developer, 
+or any other Oracle client, you can use an anonymous PL/SQL block to call a procedure.
+
+Syntax:
+
+BEGIN
+    procedure_name(param1, param2, ...);
+END;
+/
+
+BEGIN
+    RAISE_SALARY(p_id => 101);  -- Calling the procedure with EMPNO 101
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

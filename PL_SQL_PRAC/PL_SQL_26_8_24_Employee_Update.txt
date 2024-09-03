@@ -1,0 +1,101 @@
+1.SELECT * FROM EMP_SAMPLE;  -Already Exits
+2.SELECT * FROM TEMP_SAMPLE ;  - Record Feed Table 
+3.SELECT * FROM T_SAMPLE_FEED; - Empty Table 
+
+================================================================
+
+2.CREATE TABLE TEMP_SAMPLE( 
+DEPTNO  NUMBER(5),
+REV_YEAR  NUMBER(4),
+REV_PCT     NUMBER(5,2)  NOT NULL,
+CONSTRAINT  DP_CONFIG_PK  PRIMARY KEY(DEPTNO,REV_YEAR));
+
+================================================================
+
+
+3.CREATE TABLE T_SAMPLE_FEED(  
+REV_YEAR  NUMBER(5),
+EMPNO  NUMBER(5),
+DEPTNO  NUMBER(5),
+REV_SAL  NUMBER(4),
+CONSTRAINT  FEED_CONFIG_PK  PRIMARY KEY(REV_YEAR,EMPNO));
+
+================================================================
+
+
+1. TEMP_SAMPLE
+2.T_SAMPLE_FEED
+
+=====================================================================================
+1.Update A Salary from Emp_Sample to Temporary Table (Temp_Sample)
+
+DECLARE
+  V_year  Number(4):='&year';
+  V_pct  Number(5,2);
+
+BEGIN
+  Delete from T_SAMPLE_FEED
+  Where REV_YEAR=V_year;
+
+  FOR Cr1 IN (SELECT * FROM EMP_SAMPLE)
+  LOOP
+	SELECT REV_PCT 
+	         INTO V_pct 
+                           FROM TEMP_SAMPLE
+	WHERE REV_YEAR=V_year
+	AND DEPTNO = Cr1.deptno;
+
+	INSERT INTO T_SAMPLE_FEED(REV_YEAR,
+				   EMPNO,
+				   DEPTNO,
+				   REV_SAL)
+			       VALUES(V_year,
+				     Cr1.empno,
+				     Cr1.deptno,
+				     Cr1.Sal + (Cr1.Sal*(V_pct/100))
+
+  							);
+  END LOOP;
+END;
+=======================================================================================================
+
+2.Update A Salary from Emp_Sample to Temporary Table (Temp_Sample) With Exception Handling.
+
+DECLARE
+  V_year  Number(4):='&year';
+  V_pct  Number(5,2);
+
+BEGIN
+  Delete from T_SAMPLE_FEED
+  Where REV_YEAR=V_year;
+
+  FOR Cr1 IN (SELECT * FROM EMP_SAMPLE)
+  LOOP
+  
+        BEGIN
+	SELECT REV_PCT 
+	         INTO V_pct 
+                           FROM TEMP_SAMPLE
+	WHERE REV_YEAR=V_year
+	AND DEPTNO = Cr1.deptno;
+
+        EXCEPTION
+              WHEN NO_DATA_FOUND THEN
+		RAISE_APPLICATION_ERROR(-20999, 'Revised Pct defined for the Dept Num :' || Cr1.Deptno);
+
+        END;
+
+	INSERT INTO T_SAMPLE_FEED(REV_YEAR,
+				   EMPNO,
+				   DEPTNO,
+				   REV_SAL)
+			       VALUES(V_year,
+				     Cr1.empno,
+				     Cr1.deptno,
+				     Cr1.Sal + (Cr1.Sal*(V_pct/100))
+
+  							);
+  END LOOP;
+END;
+
+=======================================================================================================

@@ -1,0 +1,197 @@
+Create Table bom_header_Srp as (Select * from bom_header_ak);
+Create Table bom_line_Srp as (Select * from bom_line_ak);
+Create Table order_hd_Srp as (Select * from order_hd_ak);
+Create Table order_mat_req_Srp as (Select * from order_mat_req_ak);
+
+Select * from bom_header_Srp;
+Select * from bom_line_Srp;
+Select * from order_hd_Srp;
+Select * from order_mat_req_Srp;
+
+==================================================================================================================
+11.
+CREATE OR REPLACE PROCEDURE PROC_GEN_MAT_REQ
+(P_PROD_ID  VARCHAR2)
+IS
+    CURSOR C1 IS
+        SELECT * FROM order_hd_Srp
+        WHERE ORDER_PROD_ID = P_PROD_ID;
+
+    CURSOR C2 IS
+        SELECT * FROM  bom_header_Srp,bom_line_Srp
+        WHERE BOMHD_PAR_PROD_ID  = P_PROD_ID
+        AND BOMHD_DOC_NO=BOMLN_DOC_NO
+        AND BOMHD_STATUS='A';
+
+    CR1  C1%ROWTYPE;
+    CR2  C2%ROWTYPE;
+
+BEGIN
+    OPEN C1;
+    FETCH C1 INTO CR1;
+    
+    OPEN C2;
+    FETCH C2 INTO CR2;
+    
+    INSERT INTO order_mat_req_Srp (OMR_ORDER_NO,
+                                   OMR_PROD_ID,
+                                   OMR_UOM,
+                                   OMR_QTY)
+    VALUES(CR1.ORDER_NO,
+           CR2.BOMLN_CHILD_PROD_ID,
+           CR2.BOMLN_UOM,
+           CR1.ORDER_QTY * CR2.BOMLN_QTY);
+    DBMS_OUTPUT.PUT_LINE('Records_Inserted_Sucessfully....!');
+
+    COMMIT;
+    
+    CLOSE C2;
+    CLOSE C1;
+END;
+/
+
+Procedure created.
+
+EXECE:
+
+BEGIN
+    PROC_GEN_MAT_REQ('SFG003');  
+END;
+/
+
+==================================================================================================================
+12.
+CREATE OR REPLACE PROCEDURE PROC_GEN_MAT_REQ1
+(P_PROD_ID  VARCHAR2)
+IS
+    CURSOR C1 IS
+        SELECT * FROM order_hd
+        WHERE ORDER_PROD_ID = P_PROD_ID;
+
+    CURSOR C2 IS
+        SELECT * FROM bom_header_Srp, bom_line_Srp
+        WHERE BOMHD_PAR_PROD_ID = P_PROD_ID
+        AND BOMHD_DOC_NO = BOMLN_DOC_NO
+        AND BOMHD_STATUS = 'A';
+
+    CR1  C1%ROWTYPE;
+    CR2  C2%ROWTYPE;
+
+BEGIN
+    OPEN C1; 
+    FETCH C1 INTO CR1;
+
+    OPEN C2;  
+    FETCH C2 INTO CR2;
+    
+    INSERT INTO order_mat_req_Srp(OMR_ORDER_NO,OMR_PROD_ID,OMR_UOM,OMR_QTY)
+    VALUES  (CR1.ORDER_NO,CR2.BOMLN_CHILD_PROD_ID, CR2.BOMLN_UOM,CR1.ORDER_QTY + CR2.BOMLN_QTY);
+    DBMS_OUTPUT.PUT_LINE('Records_Inserted_Sucessfully....!');
+
+    COMMIT;
+    CLOSE C2;
+    CLOSE C1;
+END;
+/
+
+EXEC:
+
+BEGIN
+    PROC_GEN_MAT_REQ1('SFG003');  
+END;
+/
+
+============================================================================================================
+13.
+
+CREATE OR REPLACE PROCEDURE PROC_GEN_MAT_REQ12
+(P_PROD_ID  IN  VARCHAR2,
+ P_OUT  OUT   VARCHAR2)
+IS
+   CURSOR C1 IS
+        SELECT * FROM order_hd
+        WHERE ORDER_PROD_ID = P_PROD_ID;
+  
+  CURSOR C2 IS
+        SELECT * FROM bom_header_Srp, bom_line_Srp
+        WHERE BOMHD_PAR_PROD_ID = P_PROD_ID
+        AND BOMHD_DOC_NO = BOMLN_DOC_NO
+        AND BOMHD_STATUS = 'A';
+ 
+  CR1  C1%ROWTYPE;
+  CR2  C2%ROWTYPE;
+  C  NUMBER;
+
+BEGIN
+   OPEN C1;
+   FETCH C1 INTO CR1;
+   OPEN C2;
+   FETCH C2 INTO CR2;
+   
+  INSERT INTO order_mat_req_Srp(OMR_ORDER_NO,OMR_PROD_ID,OMR_UOM,OMR_QTY)
+    VALUES  (CR1.ORDER_NO,CR2.BOMLN_CHILD_PROD_ID, CR2.BOMLN_UOM,CR1.ORDER_QTY * CR2.BOMLN_QTY);
+  DBMS_OUTPUT.PUT_LINE('Records_Inserted_Sucessfully....!');
+COMMIT;
+ C :=SQL%ROWCOUNT;
+
+IF  C>0 THEN
+   P_OUT:='INSERTED';
+ELSIF C  =0 THEN
+   P_OUT:='NOT_INSERTED';
+END IF;
+CLOSE C2;
+CLOSE C1;
+END;
+/
+
+
+DECLARE
+    Prod_id VARCHAR2(50) := 'SFG003';  
+    Sts     VARCHAR2(20);   
+BEGIN
+    PROC_GEN_MAT_REQ12(Prod_id,Sts);
+    DBMS_OUTPUT.PUT_LINE('======================');
+    DBMS_OUTPUT.PUT_LINE('Status:' || Sts);
+    DBMS_OUTPUT.PUT_LINE('======================');
+END;
+/
+--==================================================================================== 
+1.Trigger_Creation
+
+CREATE OR REPLACE TRIGGER trg_before_insert_emp
+AFTER INSERT ON Emp_Srini
+FOR EACH ROW
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Before Insert Trigger Fired');
+END;
+/
+
+
+2.Audit Inserting.
+
+
+CREATE OR REPLACE TRIGGER trg_insert_audit_emp
+AFTER INSERT ON Emp_Srini
+FOR EACH ROW
+BEGIN
+  INSERT INTO Emp_Sample_Audit (Emp_Id, Action_Type, Action_Date)
+  VALUES (:OLD.EmpId, 'INSERT', SYSDATE);
+END;
+
+Create Table Emp_Sample_Audit(
+Emp_Id    Number(10),
+Action_Type  Varchar2(10),
+Action_Date   Date);
+
+Declare
+  v_ord_id      order_mat_req_Srp.OMR_ORDER_NO%type :=101;
+  rows_deleted Varchar(20);
+Begin 
+  Delete from order_mat_req_Srp
+  Where OMR_ORDER_NO=v_ord_id;
+  rows_deleted:=('Rows_Deleted::' || SQL%ROWCOUNT  );
+  dbms_output.put_line(rows_deleted);
+end;
+/
+
+

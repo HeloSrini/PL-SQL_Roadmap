@@ -1,0 +1,223 @@
+FIND ODD OR EVEN
+
+DECLARE
+    A NUMBER(10);
+BEGIN
+   A:=10;
+     FOR I IN 1..A
+       LOOP
+         IF MOD(I,2)=0 THEN
+              DBMS_OUTPUT.PUT_LINE( 'EVEN_NUM IS : '  || I );
+         ELSE
+             DBMS_OUTPUT.PUT_LINE( 'ODD_NUM IS : ' || I );
+      END IF;
+   END LOOP;
+END;
+/
+_______________________________________________________________________________________________________
+
+IF ,ELSIF,ELSE STATEMENT 
+
+DECLARE
+N  NUMBER :=10000;
+BEGIN
+   IF N > 15000 THEN
+        DBMS_OUTPUT.PUT_LINE('CORRECT');
+   ELSIF N < 15000 THEN
+        DBMS_OUTPUT.PUT_LINE('WRONG');
+   ELSE 
+        DBMS_OUTPUT.PUT_LINE('ALL ARE WRONG');   
+   END IF;
+END;
+/
+
+____________________________________________________________________________
+
+FACTORIAL 
+
+DECLARE
+   n  NUMBER := &INP ;
+   fact NUMBER :=1;
+
+BEGIN
+   FOR I IN 1..n LOOP
+         fact := fact*I;
+   END LOOP;
+   DBMS_OUTPUT.PUT_LINE('FACTORIAL OF ' || n || 'is' || fact);
+END;
+/
+
+____________________________________________________________________________
+
+TO CHECK A NUMBER IS PRIME OR NOT 
+
+DECLARE
+ 
+N  NUMBER := &INPUT;
+i    NUMBER;
+Flag BOOLEAN := TRUE;
+
+BEGIN
+
+   IF N <=1 THEN
+       Flag := FALSE;
+
+   ELSE 
+      FOR I IN 2..N/2 LOOP
+          IF MOD(N,I)=0 THEN
+               Flag := FALSE;
+               EXIT;
+         END IF;
+     END LOOP;
+  END IF;
+
+  IF Flag THEN
+       DBMS_OUTPUT.PUT_LINE('Prime Number');
+  ELSE
+       DBMS_OUTPUT.PUT_LINE('Not a Prime');
+  END IF;
+END;
+
+____________________________________________________________________________
+REVERSE A STRING
+
+DECLARE
+    A VARCHAR2(15):= 'Hello';
+    rev_str VARCHAR2(15) := '';
+BEGIN
+   FOR i in 1..LENGTH(A) 
+   LOOP
+      rev_str := rev_str || SUBSTR(A,i,1);
+   END LOOP;
+   DBMS_OUTPUT.PUT_LINE ('REVERSED STRING IS :' || rev_str);
+END;
+/
+_____________________________________________________________________________
+ODD OR EVEN 
+
+BEGIN
+   A:=10;
+   IF MOD(A,2)=0 THEN
+      DBMS_OUTPUT.PUT_LINE('EVEN NUMBER' || A);
+   ELSE 
+      DBMS_OUTPUT.PUT_LINE('ODD NUMBER' || A);
+   END IF;
+END;
+
+_____________________________________________________________________________
+LEAP Y OR NOT A LP
+     
+DECLARE 
+  YEAR NUMBER(10);
+
+BEGIN
+  YEAR := 2024;
+  IF MOD(YEAR,4)=0  AND (MOD(YEAR,100)!=0  OR MOD(YEAR,400)=0) THEN
+       DBMS_OUTPUT.PUT_LINE('LEAP');
+  ELSE 
+       DBMS_OUTPUT.PUT_LINE('NOT A LEAP');
+  END IF;
+END;
+
+_____________________________________________________________________________
+FOR LOOP FOR A RANGE UPTO 100;
+
+BEGIN
+FOR I IN 1..100 LOOP 
+    IF (I=50) THEN
+    CONTINUE;
+    DBMS_OUTPUT.PUT_LINE(I);
+END LOOP;
+END;
+
+_____________________________________________________________________________
+sum of n natural numbers 
+
+DECLARE
+sum NUMBER :=0;
+
+BEGIN
+  FOR I IN 1..10 LOOP
+     sum:sum+I ;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('SUM OF 10 NATURAL NO"S : ' || sum );
+END;
+/
+
+_____________________________________________________________________________
+PROGRAM TO FIND A TABLES 
+declare
+  num number :=&INPUT;
+begin
+  for i in 1..10 loop
+    dbms_output.put_line( num || 'x' || i || '=' || num*i );
+  end loop;
+end;
+/
+
+output :
+
+10x1=10
+10x2=20
+10x3=30
+10x4=40
+10x5=50
+10x6=60
+10x7=70
+10x8=80
+10x9=90
+10x10=100
+
+PL/SQL procedure successfully completed.
+
+_________________________________________________________________________________________________
+FIND A VOWELS IN A STRING 
+
+DECLARE
+    str VARCHAR2(100) := 'SRINIVASAN';
+    c NUMBER := 0;
+BEGIN
+    FOR i IN 1..LENGTH(str) LOOP
+        IF SUBSTR(str, i, 1) IN ('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u') THEN
+            c := c + 1;
+        END IF;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Number of vowels in "' || str || '" is: ' || c);
+END;
+/
+_________________________________________________________________________________________________
+PALINDROME 
+
+DECLARE
+    str VARCHAR2(100) := 'madam';
+    rev_str VARCHAR2(100) := '';
+BEGIN
+    FOR i IN REVERSE 1..LENGTH(str) LOOP
+        rev_str := rev_str || SUBSTR(str, i, 1);
+    END LOOP;
+    IF str = rev_str THEN
+        DBMS_OUTPUT.PUT_LINE('"' || str || '" is a palindrome.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('"' || str || '" is not a palindrome.');
+    END IF;
+END;
+/
+________________________________________________________________________________________
+LOOP FROM 1 TO 100
+
+SET SERVEROUTPUT ON;
+BEGIN
+  FOR U IN 1..100 LOOP
+      DBMS_OUTPUT.PUT_LINE(U);
+  END LOOP;
+END;
+/
+______________________________________________________________________________________
+
+DECLARE
+    X NUMBER := 10;
+    Y NUMBER;
+BEGIN
+   DBMS_OUTPUT.PUT_LINE(X+Y);
+END;
+/

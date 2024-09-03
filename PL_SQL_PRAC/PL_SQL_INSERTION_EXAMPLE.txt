@@ -1,0 +1,51 @@
+DECLARE 
+    CURSOR C1 IS
+    SELECT Src_1, Src_2 FROM Source_table;
+    Cr1      C1%ROWTYPE;
+
+BEGIN
+    DELETE FROM Target_Table;
+    OPEN C1;
+    LOOP
+        FETCH C1 INTO Cr1;
+        EXIT WHEN C1%NOTFOUND;
+
+        BEGIN
+            INSERT INTO Target_Table(Trg_1, Trg_2) 
+            VALUES (Cr1.Src_1, Cr1.Src_2);
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Error inserting record: ' || SQLERRM);
+        END;
+        
+    END LOOP;
+    CLOSE C1;
+    COMMIT;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Unexpected error: ' || SQLERRM);
+END;
+
+
+
+
+Create Table Source_table(
+Src_1 	NUMBER(10),
+Src_2 	VARCHAR2(6),
+Src_3 	VARCHAR2(8)
+);
+
+Create Table Target_Table(
+Trg_1       NUMBER(10),
+Trg_2       VARCHAR2(10),
+Trg_3       VARCHAR2(10)
+);
+
+INSERT INTO Source_table Values (1,'Srini','Prt');
+INSERT INTO Source_table Values (2,'Karthi','Cud');
+INSERT INTO Source_table Values (3,'Mani','Pdy');
+INSERT INTO Source_table Values (4,'Aakash','chd');
+
+
+=================================================================================================================

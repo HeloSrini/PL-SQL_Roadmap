@@ -1,0 +1,517 @@
+IF CONDITION
+___________________
+
+DECLARE 
+    NUM_1  NUMBER := &INP1;
+    NUM_2  NUMBER := &INP1;
+
+BEGIN
+   
+   IF NUM_1 > NUM_2 THEN
+      dbms_output.put_line('NUM_1 is Greater');
+   END IF;
+END;
+
+ELSE CONDITION
+____________________
+
+IF CONDITION
+___________________
+
+DECLARE 
+    NUM_1  NUMBER := &INP1;
+    NUM_2  NUMBER := &INP1;
+
+BEGIN
+   
+   IF NUM_1 > NUM_2 THEN
+      dbms_output.put_line('NUM_1 is Greater');
+   END IF;
+   
+  ELSE
+END;
+
+
+IF - ELSE CONDITION
+_________________________
+
+DECLARE 
+   NUM_1 NUMBER :=&INP1;
+   NUM_2 NUMBER :=&INP2;
+
+BEGIN
+  
+   IF NUM_1 > NUM_2 THEN
+       DBMS_OUTPUT.PUT_LINE('NUM_1 IS GREATER');
+
+   ELSE
+      DBMS_OUTPUT.PUT_LINE ('NUM_2 IS GREATER');  
+   END IF;
+END;
+/
+
+IF - ELSE - ELSIF CONDITION
+_________________________________
+
+DECLARE
+   NUM_1 NUMBER := &INP1;
+   NUM_2 NUMBER := &INP2;
+   NUM_3 NUMBER := &INP3;
+
+BEGIN
+
+  IF NUM_1 > NUM_2 THEN
+      DBMS_OUTPUT.PUT_LINE('NUM_1 IS GREATER');
+  
+  ELSIF NUM_2 > NUM_3 THEN
+      DBMS_OUTPUT.PUT_LINE('NUM_2 IS GREATER');
+  
+  ELSIF NUM_3 > NUM_2 THEN
+     DBMS_OUTPUT.PUT_LINE('NUM_3 IS GREATER');
+
+  ELSIF NUM_1 = NUM_2 AND NUM_1 = NUM_3 THEN
+      DBMS_OUTPUT.PUT_LINE('ALL NUMBERS ARE EQUAL');
+      
+  ELSE 
+     DBMS_OUTPUT.PUT_LINE('NOT VALID');
+  END IF;
+
+END;
+
+
+IF-ELSE-ELSEIF CONDITION
+
+TO FIND A GRADE FOR STUDENT_MARKS
+__________________________________________________
+
+DECLARE
+   SUB_1 NUMBER := &INP1;
+   SUB_2 NUMBER := &INP2;
+   SUB_3 NUMBER := &INP3;
+   SUB_4 NUMBER := &INP4;
+   SUB_5 NUMBER := &INP5;
+   TOTAL NUMBER;
+   AVERAGE NUMBER;
+   GRADE VARCHAR(5);
+
+BEGIN
+   TOTAL := SUB_1 + SUB_2 + SUB_3 + SUB_4 + SUB_5;
+   AVERAGE := TOTAL / 5;
+
+   IF AVERAGE >= 90 THEN
+      GRADE := 'A';
+   ELSIF AVERAGE >= 80 THEN
+      GRADE := 'B';
+   ELSIF AVERAGE >= 70 THEN
+      GRADE := 'C';
+   ELSIF AVERAGE >= 60 THEN
+      GRADE := 'D';
+   ELSIF AVERAGE >= 50 THEN
+      GRADE := 'E';
+   ELSE
+      GRADE := 'F';
+   END IF;
+
+   DBMS_OUTPUT.PUT_LINE('Total Marks: ' || TOTAL);
+   DBMS_OUTPUT.PUT_LINE('Average Marks: ' || AVERAGE);
+   DBMS_OUTPUT.PUT_LINE('Grade: ' || GRADE);
+
+END;
+___________________________________________________________________________________________
+
+MAXIMUM OF 2'NOS
+
+DECLARE
+    A NUMBER(10);
+    B NUMBER(10);
+    C NUMBER (10);
+
+BEGIN
+   A := 100;
+   B := 10;
+
+IF A > B THEN
+     C:=A;
+ELSE 
+    C:=B;
+END IF;
+    DBMS_OUTPUT.PUT_LINE (' MAXIMUM OF  ' ||  A  || ' AND ' || B || ' IS : '  || C );
+END;
+___________________________________________________________________________________________
+
+TO FIND A LENGTH OF A CHARACTER
+
+DECLARE
+   NAME  VARCHAR2(10) := &INP;
+
+BEGIN
+  FOR A IN 1..LENGTH(NAME) 
+LOOP
+    DBMS_OUTPUT_PUT_LINE(A);
+END LOOP;
+END;
+
+___________________________________________________________________________________________
+FIND A NUMBER IS POSITIVE OR NEGATIVE
+
+DECLARE   
+    NUM NUMBER := &INP;
+BEGIN   
+   IF NUM > 0 THEN      
+      DBMS_OUTPUT.PUT_LINE('The number is positive.');   
+   ELSIF NUM < 0 THEN      
+      DBMS_OUTPUT.PUT_LINE('The number is negative.');   
+   ELSE       
+      DBMS_OUTPUT.PUT_LINE('The number is zero.');   
+   END IF;
+END;
+/
+
+___________________________________________________________________________________________
+
+TO FIND A YEAR IS LEAP IS NOT A LEAP YEAR
+
+DECLARE
+   YEAR  NUMBER :=&INP;
+
+BEGIN
+   IF MOD(YEAR,400) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('It is a leap year.');
+   ELSIF MOD(YEAR,100) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('It is not a leap year.');
+   ELSIF MOD(YEAR,4) = 0 THEN
+       DBMS_OUTPUT.PUT_LINE('It is a Leap year.');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('It not a Leap Year.');
+   END IF;
+END;
+/
+
+___________________________________________________________________________________________
+
+PATTERNS
+
+
+DECLARE  
+  n INTEGER;  
+  i INTEGER;  
+  j INTEGER;  
+BEGIN  
+  n:=&ENTER;  
+  FOR i IN 1..n  
+  LOOP  
+  FOR j IN 1..n  
+  LOOP  
+      DBMS_OUTPUT.PUT(' * ');  
+  END LOOP;  
+      DBMS_OUTPUT.NEW_LINE;  
+  END LOOP;  
+END;  
+
+OUTPUT:
+
+****
+****
+****
+****
+****
+__________________________________________________________________________________________
+
+* - PATTERN 
+
+DECLARE  
+  n NUMBER(10);  
+  i  NUMBER(10);  
+  j  NUMBER(10); 
+ 
+BEGIN  
+  n := &ENTER;  
+  FOR i IN 1..n        1-10
+  LOOP  
+  FOR j IN 1..i  
+  LOOP  
+      DBMS_OUTPUT.PUT(' * ');  
+  END LOOP;  
+      DBMS_OUTPUT.NEW_LINE;  
+  END LOOP;  
+END; 
+
+____________
+Without Using Declaration
+
+BEGIN  
+  FOR i IN 1..10  
+  LOOP  
+  FOR j IN 1..i  
+  LOOP  
+      DBMS_OUTPUT.PUT(' # ');  
+  END LOOP;  
+      DBMS_OUTPUT.NEW_LINE;  
+  END LOOP;  
+END; 
+
+OUTPUT:
+
+*
+**
+***
+****
+*****
+__________________________________________________________________________________________
+
+# - PATTERN
+
+BEGIN
+  FOR i IN 1..5 
+  LOOP
+  FOR j IN 1..i
+  LOOP
+      DBMS_OUTPUT.PUT(' # ');
+  END LOOP;
+      DBMS_OUTPUT.NEW_LINE;
+  END LOOP;
+END;
+
+
+OUTPUT:
+
+#
+##
+###
+####
+#####
+__________________________________________________________________________________________
+
+BEGIN
+  FOR i IN 1..5 
+  LOOP
+  FOR j IN 1..i
+  LOOP
+      DBMS_OUTPUT.PUT(' 4 ');
+  END LOOP;
+      DBMS_OUTPUT.NEW_LINE;
+  END LOOP;
+END;
+
+OUTPUT:
+
+4
+44
+444
+4444
+44444
+__________________________________________________________________________________________
+
+PATTERN USING A CHR FUNCTION
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        DBMS_OUTPUT.PUT_LINE(rpad(CHR(64 + i),i,CHR(64 + i)));
+    END LOOP;
+END;
+/
+
+OUTPUT:
+A
+BB
+CCC
+DDDD
+EEEEE
+__________________________________________________________________________________________
+
+TASK -1
+
+REVERSE OF NUMBER
+
+BEGIN
+ FOR I IN REVERSE  1..5 LOOP
+    FOR J IN  I..5 LOOP
+         DBMS_OUTPUT.PUT(J);
+    END LOOP;
+         DBMS_OUTPUT.NEW_LINE;
+ END LOOP;
+END;
+
+OUTPUT:
+
+5
+45
+345
+2345
+12345
+
+__________________________________________________________________________________________
+
+BEGIN
+ FOR I IN REVERSE 1..5 LOOP
+    FOR J IN  1..5 LOOP
+         DBMS_OUTPUT.PUT(J);
+    END LOOP;
+         DBMS_OUTPUT.NEW_LINE;
+ END LOOP;                                                                                                                                                                                                                                                                     
+END;
+
+12345
+2345
+345
+45
+5
+__________________________________________________________________________________________
+
+BEGIN
+ FOR I IN 1..10 LOOP
+   FOR J IN I..10 LOOP
+      DBMS_OUTPUT.PUT(J);
+   END LOOP;
+      DBMS_OUTPUT.NEW_LINE;
+END LOOP;
+END;
+/
+
+__________________________________________________________________________________________
+
+  1  BEGIN
+  2   FOR I IN 1..5 LOOP
+  3     FOR J IN I..5 LOOP
+  4        DBMS_OUTPUT.PUT('*');
+  5     END LOOP;
+  6        DBMS_OUTPUT.NEW_LINE;
+  7  END LOOP;
+  8* END;
+
+OUTPUT:
+
+*****
+****
+***
+**
+*
+__________________________________________________________________________________________
+
+BEGIN
+ FOR I IN REVERSE 1..5 LOOP
+     FOR J IN I..5 LOOP
+         DBMS_OUTPUT.PUT('*');
+     END LOOP;
+        DBMS_OUTPUT.NEW_LINE;
+     END LOOP;
+ END;
+
+OUTPUT:
+
+*
+* *
+* * *
+* * * *
+* * * * *
+
+PL/SQL procedure successfully completed.
+
+__________________________________________________________________________________________
+BEGIN
+ FOR I IN 1..5 LOOP
+    FOR J IN  1..5 LOOP
+         DBMS_OUTPUT.PUT(J);
+    END LOOP;
+         DBMS_OUTPUT.NEW_LINE;
+ END LOOP;                                                                                                                                                                                                                                                                     
+END;
+
+OUTPUT:
+
+12345
+12345
+12345
+12345
+12345
+
+
+BEGIN
+ FOR I IN 1..5 LOOP
+   FOR J IN I..5 LOOP
+      DBMS_OUTPUT.PUT(J);
+   END LOOP;
+     DBMS_OUTPUT.NEW_LINE;
+ END LOOP;
+END;
+/
+
+BEGIN
+ FOR I IN 1..10 LOOP
+   FOR J IN I..10 LOOP
+      DBMS_OUTPUT.PUT(J);
+   END LOOP;
+      DBMS_OUTPUT.NEW_LINE;
+END LOOP;
+END;
+
+_________________________________________________________________________________________________
+SIMPLE LOOP
+
+DECLARE 
+    V_Count Number(5):=0;
+
+BEGIN
+   LOOP
+       V_Count := V_Count + 1 
+       DBMS_OUTPUT.PUT_LINE('SERIAL_NO:' ||V_Count);
+       EXIT WHEN V_Count =10;
+  END LOOP;
+END;
+/
+
+_________________________________________________________________________________________________
+
+WHILE LOOP
+
+DECLARE
+    V_Count Number(5) :=0;
+BEGIN
+    WHILE ( V_Count <=10);
+    LOOP
+         V_Count := V_Count + 1;
+         DBMS_OUTPUT.PUT_LINE('SERIAL_NO:' || V_Count);
+   END LOOP;
+END;
+/
+
+_________________________________________________________________________________________________
+FOR LOOP
+
+BEGIN
+  FOR I IN 1..10
+  LOOP
+      DBMS_OUTPUT.PUT_LINE('Serial Num:' || I);
+  END LOOP;
+END;
+
+_________________________________________________________________________________________________
+FOR LOOP IN REVERSE
+
+BEGIN
+  FOR I IN REVERSE 1..10
+  LOOP
+       DBMS_OUTPUT.PUT_LINE('Serial Num:' || I );
+  END LOOP;
+END;
+/
+
+_________________________________________________________________________________________________
+CONTINUE IN FOR LOOP:
+
+BEGIN
+  FOR I IN 1..10 
+  LOOP
+      IF I = 5 THEN
+         CONTINUE;
+      END IF;
+      DBMS_OUTPUT.PUT_LINE('Serial Num: ' || I);
+  END LOOP;
+END;
+/
+
+_________________________________________________________________________________________________/
+
+
+
+        

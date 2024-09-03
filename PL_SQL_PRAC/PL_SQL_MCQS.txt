@@ -1,0 +1,871 @@
+PL/SQL  BASICS
+
+1. pl/sql was developed by?
+
+A. IBM
+B. Oracle  
+C. Facebook
+D. Google
+
+Ans : B
+Explanation: Pl/Sql was developed by Oracle Corporation in the early 90's to enhance the capabilities of SQL.
+
+2. Which of the following is true?
+
+A. PL/SQL is a completely portable
+B. Pl/Sql is a high-performance transaction-processing language
+C. PL/SQL provides a built-in, interpreted and OS independent programming environment
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: All of the above is true about Pl/Sql.
+
+3. Which of the following are Features of PL/SQL?
+
+A. PL/SQL is tightly integrated with SQL
+B. Pl/sql offers extensive error checking
+C. Pl/Sql offers numerous data types
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: All of the above are Features of PL/SQL.
+
+4. PL/SQL provides high security level.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, PL/SQL provides high security level
+
+5. Every PL/SQL statement ends with a ?
+
+A. colon
+B. questionmark
+C. semicolon
+D. dollar sign
+View Answer
+
+Ans : C
+Explanation: Every PL/SQL statement ends with a semicolon (;).
+
+6. PL/SQL blocks can be nested within other PL/SQL blocks using?
+
+A. Begin
+B. End
+C. Both A and B
+D. None of the above
+View Answer
+
+Ans : C
+Explanation: PL/SQL blocks can be nested within other PL/SQL blocks using BEGIN and END.
+
+7. Which of the following is/are Advantages of PL/SQL?
+
+A. PL/SQL is strongly integrated with SQL
+B. PL/SQL allows sending an entire block of statements to the database at one time
+C. PL/SQL gives high productivity to programmers as it can query, transform, and update data in a database
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: All of the above are Advantages of PL/SQL
+
+8. The PL/SQL supports?
+
+A. single-line comments
+B. multi-line comments
+C. single-line and multi-line comments
+D. None of the above
+View Answer
+
+Ans : C
+Explanation: The PL/SQL supports single-line and multi-line comments.
+
+9. PL/SQL provides support for Object-Oriented Programming.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, PL/SQL provides support for Object-Oriented Programming.
+
+10. PL/SQL identifiers are?
+
+A. constants
+B. variables
+C. exceptions
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: PL/SQL identifiers are constants, variables, exceptions, procedures, cursors, and reserved words. 
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL - Variables
+
+1. A _______ is nothing but a name given to a storage area that our programs can manipulate
+
+A. object
+B. constant
+C. variable
+D. literals
+View Answer
+
+Ans : C
+Explanation: A variable is nothing but a name given to a storage area that our programs can manipulate
+
+
+2. variable names are ?
+
+A. case-sensitive
+B. not case-sensitive
+C. Both A and B
+D. None of the above
+
+Ans : B
+Explanation: variable names are not case-sensitive
+
+3. When you provide a size, scale or precision limit with the data type, it is called a?
+
+A. identifier declaration
+B. non declaration
+C. constrained declaration
+D. unconstrained declaration
+View Answer
+
+Ans : C
+Explanation: When you provide a size, scale or precision limit with the data type, it is called a constrained declaration
+
+
+4. Constrained declarations require less memory than unconstrained declarations.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+
+Ans : A
+Explanation: Yes, Constrained declarations require less memory than unconstrained declarations
+
+5. How many types of variable scope?
+
+A. 1
+B. 2
+C. 3
+D. 4
+
+Ans : B
+Explanation: There are two types of variable scope: Local variables and Global variables.
+
+6. Variables declared in an inner block and not accessible to outer blocks known as?
+
+A. Local variables
+B. Global variables
+C. Nested variable
+D. None of the above
+View Answer
+
+Ans : A
+Explanation: Local variables : Variables declared in an inner block and not accessible to outer blocks.
+
+
+7. A Variable in PL/SQL should not exceed ________ characters ?
+
+A. 10
+B. 20
+C. 30
+D. 40
+View Answer
+
+Ans : C
+Explanation: A Variable in PL/SQL should not exceed 30 characters.
+
+
+8. Which of the following is/are TRUE about PL/SQL Variables?
+
+A. Variables serve as a means for programmers to temporarily store data during code execution.
+B. PL/SQL programs benefit from its use.
+C. There is nothing special about it other than being the name of a storage area.
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: All of the above are TRUE about PL/SQL Variables
+
+
+9. PL/SQL Variable needs to be declared in the ?
+
+A. Variable Section
+B. Declaration Section
+C. Initialization Section
+D. Exception Section
+View Answer
+
+Ans : B
+Explanation: PL/SQL Variable needs to be declared in the Declaration Section.
+
+
+10. PL/SQL assigns it a default value of NULL.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, PL/SQL assigns it a default value of NULL.
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL OPERATORS
+
+1. Which of the following operator adds two operands?
+
+A. Subtracts
+B. Addition
+C. Multiplies
+D. Exponentiation
+View Answer
+
+Ans : B
+Explanation: Addition operator adds two operands
+
+
+2. ___________ compare two expressions or values and return a Boolean result.
+
+A. Arithmetic operators
+B. Comparison operators
+C. Relational operators
+D. Logical operators
+View Answer
+
+Ans : C
+Explanation: Relational operators compare two expressions or values and return a Boolean result.
+
+
+3. Which operator checks if the values of two operands are equal or not, if yes then condition becomes true?
+
+A. not equal
+B. greater than
+C. less than
+D. equal
+View Answer
+
+Ans : D
+Explanation: Equal (=) : Checks if the values of two operands are equal or not, if yes then condition becomes true.
+
+
+4. How many results comparison operators can give?
+
+A. 1
+B. 2
+C. 3
+D. 4
+View Answer
+
+Ans : C
+Explanation: Comparison operators are used for comparing one expression to another. The result is always either TRUE, FALSE or NULL.
+
+
+5. The ______ operator tests whether a value lies in a specified range
+
+A. LIKE
+B. BETWEEN
+C. IN
+D. NULL
+View Answer
+
+Ans : B
+Explanation: The BETWEEN operator tests whether a value lies in a specified range. 
+
+
+
+6. The LIKE operator compares a character, string, or CLOB value to a pattern and returns TRUE if the value matches the pattern and FALSE if it does not.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, The LIKE operator compares a character, string, or CLOB value to a pattern and returns TRUE if the value matches the pattern and FALSE if it does not.
+
+
+7. Variable A holds 10 and variable B holds 5, then (A = B) is?
+
+A. TRUE
+B. Not true
+C. Null
+D. Error
+View Answer
+
+Ans : B
+Explanation: (A = B) is not true.
+
+
+8. Variable A holds true and variable B holds false, then not (A and B) is?
+
+A. TRUE
+B. FALSE
+C. Null
+D. Error
+View Answer
+
+Ans : A
+Explanation: not (A and B) is true.
+
+
+9. Which operator has highest precedence?
+
+A. identity
+B. negation
+C. addition
+D. exponentiation
+View Answer
+
+Ans : D
+Explanation: exponentiation has highest precedence.
+
+
+10. The IN operator tests set membership. x IN (set) means that x is equal to any member of set.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, The IN operator tests set membership. x IN (set) means that x is equal to any member of set.
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL CONDITIONS
+
+1. The __________ associates a condition with a sequence of statements enclosed by the keywords THEN and END IF.
+
+A. GOTO statement
+B. IF statement
+C. CASE statement
+D. LOOP statement
+View Answer
+
+Ans : B
+Explanation: The IF statement associates a condition with a sequence of statements enclosed by the keywords THEN and END IF.
+
+
+2. What is output for the following code?
+
+BEGIN 
+   a:= 10; 
+   IF( a < 20 ) THEN 
+      dbms_output.put_line('a is less than 20 ' ); 
+   END IF; 
+   dbms_output.put_line('value of a is : ' || a); 
+END;
+A. Null
+B. a is less than 20
+C. Error
+D. Exception
+View Answer
+
+Ans : B
+Explanation: a is less than 20 is output for the following code
+
+
+3. What is output for the following code?
+
+BEGIN
+   a := 100;  
+   IF( a < 20 ) THEN 
+      dbms_output.put_line('a is less than 20 ' ); 
+   ELSE 
+      dbms_output.put_line('a is not less than 20 ' ); 
+   END IF; 
+END; 
+A. a is less than 20
+B. Error
+C. a is not less than 20
+D. Null
+View Answer
+
+Ans : C
+Explanation: a is not less than 20 is output for the following code
+
+
+4. Which of the following is true?
+
+A. It's ELSIF, not ELSEIF.
+B. An IF-THEN statement can have zero or one ELSE's and it must come after any ELSIF's.
+C. Once an ELSIF succeeds, none of the remaining ELSIF's or ELSE's will be tested.
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: All of the above statement is true.
+
+
+5. The CASE statement selects one sequence of statements to execute.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, the CASE statement selects one sequence of statements to execute.
+
+
+
+6. What is output for the following code?
+
+DECLARE 
+   grade char(1) := 'A'; 
+BEGIN 
+   CASE grade 
+      when 'A' then dbms_output.put_line('Excellent'); 
+      when 'B' then dbms_output.put_line('Very good'); 
+      when 'C' then dbms_output.put_line('Well done'); 
+      when 'D' then dbms_output.put_line('You passed'); 
+      when 'F' then dbms_output.put_line('Better try again'); 
+      else dbms_output.put_line('No such grade'); 
+   END CASE; 
+END; 
+A. Excellent
+B. Very good
+C. Well done
+D. You passed
+View Answer
+
+Ans : A
+Explanation: Excellent is output for the following code
+
+
+7. CASE statement uses which keyword to work like IF statement?
+
+A. INTO
+B. AS
+C. WHEN
+D. IN
+View Answer
+
+Ans : C
+Explanation: CASE statement uses WHEN keyword to work like IF statement
+
+
+8. What are the selectors in case of CASE statement?
+
+A. Variable
+B. Function
+C. Expression
+D. All of the above
+View Answer
+
+Ans : D
+Explanation: The selectors in case of CASE statement are Variable, Function or Expression.
+
+
+9. In which Oracle does the PL/SQL Continue Statement is supported?
+
+A. Oracle 8g
+B. Oracle 11g
+C. Oracle 9g
+D. Oracle 10g
+View Answer
+
+Ans : B
+Explanation: Oracle 11g supports PL/SQL Continue statement.
+
+
+10. The searched CASE statement has no selector and the WHEN clauses of the statement contain search conditions that give Boolean values.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, The searched CASE statement has no selector and the WHEN clauses of the statement contain search conditions that give Boolean values.
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL LOOPINGS
+
+1. A ______ statement allows us to execute a statement or group of statements multiple times.
+
+A. condition
+B. loop
+C. array
+D. procedure
+View Answer
+
+Ans : B
+Explanation: A loop statement allows us to execute a statement or group of statements multiple times.
+
+
+2. Sequence of statements is enclosed between the LOOP and the END LOOP statements.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, sequence of statements is enclosed between the LOOP and the END LOOP statements.
+
+
+3. The label should be enclosed by ?
+
+A. single angle brackets
+B. double dollar sign
+C. double angle brackets
+D. single dollar sign
+View Answer
+
+Ans : C
+Explanation: The label should be enclosed by double angle brackets.
+
+
+4. Label appear at the ________ of the LOOP statement.
+
+A. end
+B. beginning
+C. anywhere
+D. Can not say
+View Answer
+
+Ans : B
+Explanation: Label appear at the beginning of the LOOP statement.
+
+
+5. A ______ LOOP statement in PL/SQL programming language repeatedly executes a target statement as long as a given condition is true.
+
+A. BASIC
+B. FOR
+C. Both A and B
+D. WHILE
+View Answer
+
+Ans : D
+Explanation: A WHILE LOOP statement in PL/SQL programming language repeatedly executes a target statement as long as a given condition is true.
+
+
+
+6. Does PL/SQL allows using one loop inside another loop.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, PL/SQL allows using one loop inside another loop.
+
+
+7. PL/SQL Loops are also known as
+
+A. Iterative Case Statements
+B. Iterative Control Statements
+C. Indentation Control Statements
+D. Indentation Case Statements
+View Answer
+
+Ans : B
+Explanation: PL/SQL Loops are also known as Iterative Control Statements.
+
+
+8. What is the syntax of PL/SQL Loop?
+
+A. LOOP END LOOP; Sequence of statements;
+B. END LOOP; LOOP Sequence of statements;
+C. LOOP Sequence of statements; END LOOP;
+D. END LOOP; Sequence of statements; LOOP
+View Answer
+
+Ans : C
+Explanation: LOOP Sequence of statements; END LOOP;
+
+
+9. How many types of PL/SQL Loops are there?
+
+A. 1
+B. 2
+C. 3
+D. 4
+View Answer
+
+Ans : D
+Explanation: There are 4 types of PL/SQL loops.
+
+
+10. PL/SQL loops can be labeled.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, PL/SQL loops can be labeled.
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL CURSORS
+
+1. A _____ is a pointer to this context area.
+
+A. records
+B. cursor
+C. packages
+D. trigger
+View Answer
+
+Ans : B
+Explanation: A cursor is a pointer to this context area.
+
+
+2. PL/SQL controls the context area through a cursor.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, PL/SQL controls the context area through a cursor.
+
+
+3. The set of rows the cursor holds is referred to as the __________.
+
+A. inactive set
+B. simple set
+C. active set
+D. complex set
+View Answer
+
+Ans : C
+Explanation: The set of rows the cursor holds is referred to as the active set.
+
+
+4. How many types of cursors?
+
+A. 1
+B. 2
+C. 3
+D. 4
+View Answer
+
+Ans : B
+Explanation: There are two types of cursors : Implicit cursors and Explicit cursors
+
+
+5. Programmers cannot control the _______ cursors and the information in it.
+
+A. implicit
+B. explicit
+C. both a and b
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Programmers cannot control the implicit cursors and the information in it.
+
+
+
+6. Which attribute returns TRUE if an INSERT, UPDATE, or DELETE statement affected one or more rows?
+
+A. %NOTFOUND
+B. %ISOPEN
+C. %ROWCOUNT
+D. %FOUND
+View Answer
+
+Ans : D
+Explanation: %FOUND : Returns TRUE if an INSERT, UPDATE, or DELETE statement affected one or more rows or a SELECT INTO statement returned one or more rows. Otherwise, it returns FALSE.
+
+
+7. Which of the following is correct syntax to open the Cursor?
+
+A. SELECT cursor_name
+B. INSERT cursor_name
+C. UPDATE cursor_name
+D. OPEN cursor_name
+View Answer
+
+Ans : D
+Explanation: OPEN cursor_name is correct syntax to open the Cursor.
+
+
+8. Oracle creates ___________ when SQL statements are processed.
+
+A. Content Areas
+B. Context Areas
+C. Context Ids
+D. Content Ids
+View Answer
+
+Ans : B
+Explanation: Oracle creates context areas when SQL statements are processed.
+
+
+9. The Implicit cursors are created in order to process the ____ statements.
+
+A. DDL
+B. DCL
+C. DML
+D. TCL
+View Answer
+
+Ans : C
+Explanation: The implicit cursors are created in order to process the DML statements such as INSERT, DELETE, UPDATE, etc.
+
+
+10. Explicit cursors are programmer-defined cursors for gaining more control over the context area.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, Explicit cursors are programmer-defined cursors for gaining more control over the context area.
+____________________________________________________________________________________________________________________________________________
+
+PL/SQL - Exception
+
+1. PL/SQL supports programmers to catch such conditions using ________ block in the program
+
+A. Try
+B. Throw
+C. Catch
+D. Exception
+View Answer
+
+Ans : D
+Explanation: PL/SQL supports programmers to catch such conditions using EXCEPTION block in the program
+
+
+2. How many types of exceptions?
+
+A. 1
+B. 2
+C. 3
+D. 4
+View Answer
+
+Ans : B
+Explanation: There are two types of exceptions : System-defined exceptions and User-defined exceptions
+
+
+3. An exception is an error condition during a program execution.
+
+A. TRUE
+B. FALSE
+C. Can be true or false
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: True, An exception is an error condition during a program execution.
+
+
+4. Which attribute is used to raise exception?
+
+A. Open
+B. Select
+C. Raise
+D. Try
+View Answer
+
+Ans : C
+Explanation: RAISE exception_name;
+
+
+5. A _____ exception must be declared and then raised explicitly.
+
+A. system-defined
+B. user-defined
+C. both a and b
+D. None of the above
+View Answer
+
+Ans : B
+Explanation: A user-defined exception must be declared and then raised explicitly.
+
+
+
+6. What is the Oracle Error Code for ACCESS_INTO_NULL?
+
+A. 6592
+B. 6531
+C. 1722
+D. 6530
+View Answer
+
+Ans : D
+Explanation: Oracle Error : 06530
+
+
+7. Which of the following is TRUE about User-defined exceptions?
+
+A. Users can explicitly raise an exception by using a RAISE statement
+B. RAISE_APPLICATION_ERROR can be used to raise a user-defined exception explicitly
+C. both a and b
+D. None of the above
+View Answer
+
+Ans : C
+Explanation: Users can explicitly raise an exception by using a RAISE statement or DBMS_STANDARD.RAISE_APPLICATION_ERROR can be used to raise a user-defined exception explicitly.
+
+
+8. What is the syntax of User-defined exceptions?
+
+A. DECLARE my-exception EXCEPTION;
+B. DECLARE EXCEPTION;
+C. DECLARE my-exception;
+D. EXCEPTION;
+View Answer
+
+Ans : A
+Explanation: DECLARE my-exception EXCEPTION is the syntax of user-defined exceptions.
+
+
+9. Which of the following clause does not comes in the syntax while raising an exception?
+
+A. DECLARE
+B. WHEN
+C. CLOSE
+D. END
+View Answer
+
+Ans : C
+Explanation: CLOSE clause doesn't come in the syntax while raising an exception.
+
+
+10. Exceptions are raised by the database server automatically whenever there is any internal database error.
+
+A. Yes
+B. No
+C. Can be yes or no
+D. Can not say
+View Answer
+
+Ans : A
+Explanation: Yes, Exceptions are raised by the database server automatically whenever there is any internal database error.
+____________________________________________________________________________________________________________________________________________
+
+

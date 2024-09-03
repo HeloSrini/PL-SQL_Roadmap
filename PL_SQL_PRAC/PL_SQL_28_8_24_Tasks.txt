@@ -1,0 +1,266 @@
+1.Function to Find a Employee_Name With Specificed Employee_id:-
+
+CREATE OR REPLACE FUNCTION FIND_A_EMPNAME (D_EMPNO IN NUMBER)
+RETURN VARCHAR2(10)
+AS
+   E_NAME EMP_SAMPLE.ENAME%TYPE;
+BEGIN
+   SELECT ENAME
+   INTO E_NAME
+   FROM EMP_SAMPLE
+   WHERE EMPNO = D_EMPNO;
+   
+   RETURN E_NAME;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'Employee Name not Founded in a Emp_Sample Table';    
+END;
+/
+
+Execution:
+DECLARE
+    Result VARCHAR2(10);
+BEGIN
+   Result := FIND_A_EMPNAME('7876');
+   DBMS_OUTPUT.PUT_LINE(Result);
+END;
+
+EXEC FIND_A_EMPNAME ('7876');
+
+==================================================================================================
+
+2.PL/SQL Procedure to Retrieve a Student Details Based On a Register_Number:-
+
+CREATE OR REPLACE PROCEDURE Proc_task
+(Regno NUMBER)
+IS
+    CURSOR C1 IS
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'TAMIL' AS SUBJECT, TAMIL AS MARK 
+            FROM STUD_SRINI 
+            WHERE TAMIL = (SELECT MAX(TAMIL) FROM STUD_SRINI)  and  REG_NO = Regno
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'ENGLISH' AS SUBJECT, ENGLISH AS MARK 
+            FROM STUD_SRINI 
+            WHERE ENGLISH = (SELECT MAX(ENGLISH) FROM STUD_SRINI) and  REG_NO = Regno
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'MATHS' AS SUBJECT, MATHS AS MARK 
+            FROM STUD_SRINI 
+            WHERE MATHS = (SELECT MAX(MATHS) FROM STUD_SRINI)  and  REG_NO = Regno
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'SCIENCE' AS SUBJECT, SCIENCE AS MARK 
+            FROM STUD_SRINI 
+            WHERE SCIENCE = (SELECT MAX(SCIENCE) FROM STUD_SRINI)  and  REG_NO = Regno
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'SOCIAL' AS SUBJECT, SOCIAL AS MARK 
+            FROM STUD_SRINI 
+            WHERE SOCIAL = (SELECT MAX(SOCIAL) FROM STUD_SRINI) and  REG_NO = Regno;
+BEGIN
+    Delete from STUDENT_GRADE_SRP;
+    FOR I IN C1 LOOP
+        INSERT INTO STUDENT_GRADE_SRP (REG_NO, STUD_NAME, DOB, SUBJECT, MARK)
+        VALUES (I.REG_NO, I.STUD_NAME, I.DOB, I.SUBJECT, I.MARK);
+    END LOOP;
+   COMMIT;
+END;
+/
+
+Execute:
+
+BEGIN
+Proc_task(1006);
+END;
+
+Output:
+
+SQL> select * from STUDENT_GRADE_SRP;
+
+    REG_NO STUD_NAME                                     DOB             SUBJECT                              MARK
+---------- --------------------------------------------- --------------- ------------------------------ ----------
+      1006 SANA                                          11-APR-02       TAMIL                                 100
+      1006 SANA                                          11-APR-02       MATHS                                 100
+      1006 SANA                                          11-APR-02       SCIENCE                               100
+
+
+======================================
+
+PL/SQL Procedure to Retrieve a Student Details :-
+
+CREATE OR REPLACE PROCEDURE Proc_task
+IS
+    CURSOR C1 IS
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'TAMIL' AS SUBJECT, TAMIL AS MARK 
+            FROM STUD_SRINI 
+            WHERE TAMIL = (SELECT MAX(TAMIL) FROM STUD_SRINI)  
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'ENGLISH' AS SUBJECT, ENGLISH AS MARK 
+            FROM STUD_SRINI 
+            WHERE ENGLISH = (SELECT MAX(ENGLISH) FROM STUD_SRINI) 
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'MATHS' AS SUBJECT, MATHS AS MARK 
+            FROM STUD_SRINI 
+            WHERE MATHS = (SELECT MAX(MATHS) FROM STUD_SRINI) 
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'SCIENCE' AS SUBJECT, SCIENCE AS MARK 
+            FROM STUD_SRINI 
+            WHERE SCIENCE = (SELECT MAX(SCIENCE) FROM STUD_SRINI) 
+            UNION ALL
+            SELECT REG_NO, STUD_NAME, DOB, SEX, 'SOCIAL' AS SUBJECT, SOCIAL AS MARK 
+            FROM STUD_SRINI 
+            WHERE SOCIAL = (SELECT MAX(SOCIAL) FROM STUD_SRINI);
+BEGIN
+    Delete from STUDENT_GRADE_SRP;
+    FOR I IN C1 LOOP
+        INSERT INTO STUDENT_GRADE_SRP (REG_NO, STUD_NAME, DOB, SUBJECT, MARK)
+        VALUES (I.REG_NO, I.STUD_NAME, I.DOB, I.SUBJECT, I.MARK);
+    END LOOP;
+   COMMIT;
+END;
+
+To Execution:
+
+Exec Proc_task;
+
+
+    REG_NO STUD_NAME                                     DOB             SUBJECT                              MARK
+---------- --------------------------------------------- --------------- ------------------------------ ----------
+      1006 SANA                                          	11-APR-02       TAMIL                                 	100
+      1010 SHARMILA                                      18-AUG-02       TAMIL                                 	100
+      1004 MOHAN                                         	11-AUG-02       ENGLISH                               100
+      1009 AHMED                                         	17-JUL-02         ENGLISH                               100
+      1006 SANA                                          	11-APR-02       MATHS                                 	100
+      1007 SHALINI                                       	12-MAY-01       MATHS                                 	100
+      1008 PRIYADARSHINI                             16-JUN-02       MATHS                                 	100
+      1009 AHMED                                         	17-JUL-02         MATHS                                 100
+      1002 VIDYASAGAR                                   20-MAR-02      SCIENCE                               100
+      1006 SANA                                          	11-APR-02       SCIENCE                               100
+      1008 PRIYADARSHINI                             16-JUN-02       SCIENCE                               100
+      1005 THANISH                                       	12-MAY-02       SOCIAL                                100
+      1007 SHALINI                                       	12-MAY-01       SOCIAL                                100
+
+13 rows selected.
+==================================================================================================
+3.Using a Cursor With Retrieve a Records based on Sales_inv Tables:-
+
+DECLARE
+  CURSOR C1 IS
+    SELECT A.SIL_ITEM_ID, A.SIL_INV_QTY, A.SIL_UNIT_PRICE, B.SIH_INV_DATE, B.SIH_CUST_ID
+    FROM SALES_INV_LN_SRINI A,SALES_INV_HDR_SRINI B ON A.SIL_INV_NO = B.SIH_INV_NO;
+
+  CR1 C1%ROWTYPE;
+
+BEGIN
+  OPEN C1;
+  LOOP
+    FETCH C1 INTO CR1;
+    EXIT WHEN C1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Invoice ID: ' || CR1.SIL_ITEM_ID   ||  '   Invoice Qty: ' || CR1.SIL_INV_QTY ||  '   Unit Price: ' || CR1.SIL_UNIT_PRICE || 
+                        				 '   Invoice Date: ' || CR1.SIH_INV_DATE || 
+                         				 '   Cust ID: ' || CR1.SIH_CUST_ID);
+  END LOOP;
+  CLOSE C1;
+END;
+/
+
+==================
+
+PL/SQL Procedure to Retrieve a Records based on Sales_inv Tables:-
+
+CREATE OR REPLACE PROCEDURE Sales_task_plsql 
+(INVNO IN VARCHAR2)
+IS
+  CURSOR C1 IS
+    SELECT SIH_INV_NO, SIL_ITEM_ID, SIH_CUST_ID, CUST_NAME, SIL_INV_QTY, SIL_UNIT_PRICE, SIL_DISC_PCT
+    FROM SALES_INV_LN_SRINI, SALES_INV_HDR_SRINI, CUST_MASTER_SRINI
+    WHERE SIH_CUST_ID = CUST_ID
+    AND SIH_INV_NO = SIL_INV_NO
+    AND SIL_INV_NO = INVNO;
+
+  CR1 C1%ROWTYPE;
+
+BEGIN
+  OPEN C1;
+  LOOP
+    FETCH C1 INTO CR1;
+    EXIT WHEN C1%NOTFOUND;
+    
+    DBMS_OUTPUT.PUT_LINE('==================================');
+    DBMS_OUTPUT.PUT_LINE('Invoice No         : ' || CR1.SIH_INV_NO);
+    DBMS_OUTPUT.PUT_LINE('Item Id            : ' || CR1.SIL_ITEM_ID);
+    DBMS_OUTPUT.PUT_LINE('Customer Id        : ' || CR1.SIH_CUST_ID);
+    DBMS_OUTPUT.PUT_LINE('Customer Name      : ' || CR1.CUST_NAME);
+    DBMS_OUTPUT.PUT_LINE('Invoice Qty        : ' || CR1.SIL_INV_QTY);
+    DBMS_OUTPUT.PUT_LINE('Unit Price         : ' || CR1.SIL_UNIT_PRICE);
+    DBMS_OUTPUT.PUT_LINE('Discount Percentage: ' || CR1.SIL_DISC_PCT);
+    DBMS_OUTPUT.PUT_LINE('==================================');
+  END LOOP;
+        
+  CLOSE C1;
+END;
+/
+
+Execution:
+
+BEGIN
+  Sales_task_plsql('2324-002');
+END;
+/
+
+Output:
+
+==================================
+Invoice No         : 2324-002
+Item Id            : FG1001
+Customer Id        : C1002
+Customer Name      : AURO MACHINE TOOLS
+Invoice Qty        : 22
+Unit Price         : 25.75
+Discount Percentage: 10
+==================================
+==================================
+Invoice No         : 2324-002
+Item Id            : FG1002
+Customer Id        : C1002
+Customer Name      : AURO MACHINE TOOLS
+Invoice Qty        : 38
+Unit Price         : 35.65
+Discount Percentage: 12.25
+==================================
+==================================
+Invoice No         : 2324-002
+Item Id            : FG1003
+Customer Id        : C1002
+Customer Name      : AURO MACHINE TOOLS
+Invoice Qty        : 47
+Unit Price         : 44.65
+Discount Percentage: 14.25
+==================================
+==================================
+Invoice No         : 2324-002
+Item Id            : FG1004
+Customer Id        : C1002
+Customer Name      : AURO MACHINE TOOLS
+Invoice Qty        : 37
+Unit Price         : 47.45
+Discount Percentage: 12.25
+==================================
+==================================
+Invoice No         : 2324-002
+Item Id            : FG1005
+Customer Id        : C1002
+Customer Name      : AURO MACHINE TOOLS
+Invoice Qty        : 67
+Unit Price         : 37.35
+Discount Percentage: 13.25
+==================================
+
+PL/SQL procedure successfully completed.
+
+====================================================================================================
+
+SELECT * FROM SALES_INV_LN_SRINI;
+SELECT * FROM SALES_INV_HDR_SRINI;
+SELECT * FROM CUST_MASTER_SRINI;
+
+
+

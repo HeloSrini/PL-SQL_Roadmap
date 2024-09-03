@@ -1,0 +1,291 @@
+Contents to Learn in PL/SQL Procedures:
+1. Creating Procedures: Understand how to define a procedure using the CREATE PROCEDURE statement.
+Parameters:
+2.Parameters:
+---> IN Parameters: Used to pass values into the procedure.
+---> OUT Parameters: Used to return values from the procedure.
+---> IN OUT Parameters: Used to pass values into and out of the procedure.
+3.Variables and Constants: Declaring and using variables and constants within a procedure.
+4.Control Structures: Using loops (FOR, WHILE), conditional statements (IF, CASE) within a procedure.
+5.Exception Handling: Managing errors using the EXCEPTION block.
+6.Calling Procedures: How to execute a procedure from another PL/SQL block or from SQL*Plus.
+7.Cursor Handling: Using cursors within procedures for row-by-row processing.
+
+1.To Verify a Errors from Table:
+
+SHOW ERRORS PROCEDURE get_employee_details;
+
+
+1.
+CREATE OR REPLACE PROCEDURE PROC_DETAILS_VAL
+(
+  V_EMPNO    IN      NUMBER,
+  V_ENAME    OUT     VARCHAR2
+)
+IS
+BEGIN
+  SELECT ENAME 
+  INTO V_ENAME
+  FROM EMP_SAMPLE
+  WHERE EMPNO = V_EMPNO;
+
+V_ENAME:=Sample_name   
+END;
+
+2.PL/SQL Procedure to Update a Salary in Emp_Sample Table
+
+CREATE OR REPLACE PROCEDURE RAISE_SALARY
+(p_id   IN  Emp_Sample.sal %Type)
+IS
+BEGIN
+	UPDATE Emp_Sample
+	SET Sal=sal*1.10
+	WHERE EMPNO=p_id;
+END;
+Procedure created.
+
+Output:
+
+SQL> EXEC RAISE_SALARY(7876);
+
+PL/SQL procedure successfully completed.
+
+ 7876 ADAMS                          CLERK                             7788        23-MAY-87             1210                    20
+
+=================================================================================================
+3. PLSQL Procedure to Retrieve a Employee_Name and Job
+
+CREATE OR REPLACE PROCEDURE PROC_EMP
+ (A_EMP_NO  IN  NUMBER,
+ A_EMP_NAME  OUT VARCHAR2,
+ A_JOB      OUT   VARCHAR2
+ )
+ IS
+ B_EMPNAME   EMP_SAMPLE.ENAME%TYPE;
+ B_JOB   EMP_SAMPLE.JOB%TYPE;
+ BEGIN
+   SELECT ENAME,JOB INTO B_EMPNAME,B_JOB
+   FROM EMP_SAMPLE
+    WHERE EMPNO=A_EMP_NO;
+ 
+ A_EMP_NAME:=B_EMPNAME;
+ A_JOB:=B_JOB;
+ END;
+ /
+
+EXECUTION:
+
+VARIABLE A VARCHAR2(20);
+VARIABLE B VARCHAR2(20);
+EXEC PROC_EMP(7839,:A,:B);
+PRINT A;
+
+DECLARE
+    A VARCHAR2(20);
+    B VARCHAR2(20);
+BEGIN
+    PROC_EMP(7839,A,B);
+
+    DBMS_OUTPUT.PUT_LINE('NAME: ' || A);
+    DBMS_OUTPUT.PUT_LINE('JOB: ' || B);
+END;
+/
+
+=================================================================================================
+4. Insert a New Employee Record
+
+CREATE OR REPLACE PROCEDURE Insert_Emp_Srinii
+(pemp_id IN Emp_Sample.Empno%TYPE,
+ pname IN Emp_Sample.Ename%TYPE,
+ pgender IN Emp_Sample.Job%TYPE,
+ psal IN Emp_Sample.Sal%TYPE
+) 
+IS
+BEGIN
+    INSERT INTO Emp_Sample(EMPID,EMP_NAME,GENDER,BASIC_SAL)
+    VALUES (pemp_id, pname, pjob,psal);
+END;
+
+Execution:
+
+Exec Insert_Emp_Srini(2001,'Srinivasan','Developer',25000);
+
+BEGIN
+  INSERT_EMP_SRINI(2001,'Srinivasan','Developer',25000);
+END;
+/
+
+
+=================================================================================================
+5.Delete a Record from Emp_Sample Table:
+
+CREATE OR REPLACE PROCEDURE delete_emp_Sample
+(p_emp_id IN Emp_Sample.empno%TYPE) 
+IS
+BEGIN
+    DELETE FROM Emp_Sample
+    WHERE empno = p_emp_id;
+END;
+
+Execution:
+
+Exec delete_emp_Sample(7934);
+
+=================================================================================================
+3.Count a No.Of.Employees:
+
+CREATE OR REPLACE PROCEDURE count_emp
+(p_total OUT NUMBER) 
+IS
+BEGIN
+    SELECT COUNT(*) INTO p_total FROM Emp_sample;
+END;
+
+Execution:
+
+Declare
+  total   Number(10);
+Begin
+ count_emp(total);
+ dbms_output.put_line('Total_no_of_Counts:' ||total);
+End;
+=================================================================================================
+Procedure with Default Parameters.
+
+CREATE OR REPLACE PROCEDURE get_employee_details
+(Empid     IN Emp_Sample.empno%TYPE DEFAULT  7788,
+E_Ename OUT Emp_Sample.Ename%TYPE,
+E_Job        OUT Emp_Sample.Job%TYPE) 
+IS
+BEGIN
+    SELECT Ename,Job
+    INTO E_Ename, E_Job
+    FROM Emp_Sample
+    WHERE Empno = Empid;
+    /*
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || Empid);
+    DBMS_OUTPUT.PUT_LINE('Employee_Name: ' || E_Ename);
+    DBMS_OUTPUT.PUT_LINE('Job Title: ' || E_Job);
+    */
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employee found with ID ' || Empid);
+END;
+/
+
+==
+E_Ename:= AB;
+E_Job := BC;
+
+VARIABLE  A VARCHAR2(10);
+VARIABLE B VARCHAR2(10);
+EXEC get_employee_details(7839,:A,:B);
+==
+
+SET SERVEROUTPUT ON;
+
+To Exec Part:
+
+DECLARE
+    v_Ename Emp_Sample.Ename%TYPE;
+    v_Job Emp_Sample.Job%TYPE;
+BEGIN
+    get_employee_details(E_Ename => v_Ename,E_Job => v_Job);
+    	DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_Ename);
+    	DBMS_OUTPUT.PUT_LINE('Job Title: ' || v_Job);
+END;
+/
+=================================================================================================
+Retrieve All Records from Emp_Sample Using a For Loop Cursor:-
+
+CREATE OR REPLACE PROCEDURE display_all_employees 
+IS
+CURSOR C1
+ IS
+     SELECT empno, Ename, Job,Hiredate
+     FROM Emp_Sample;
+     
+BEGIN  
+    FOR Cr1 IN C1
+ LOOP
+        DBMS_OUTPUT.PUT_LINE('Employee ID: ' || Cr1.empno);
+        DBMS_OUTPUT.PUT_LINE('Employee Name: ' || Cr1.Ename);
+        DBMS_OUTPUT.PUT_LINE('Job Title: ' || Cr1.Job);
+        DBMS_OUTPUT.PUT_LINE('Joined Date: ' || Cr1.Hiredate);
+        DBMS_OUTPUT.PUT_LINE('================');
+ END LOOP;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/
+
+
+SET SERVEROUTPUT ON;
+
+BEGIN
+    display_all_employees ;
+END;
+/
+=================================================================================================
+
+CREATE OR REPLACE PROCEDURE 
+
+Select * from SALES_INV_LN_SRINI;
+Select * from SALES_INV_HDR_SRINI; 
+Select * from CUST_MASTER_SRINI;
+
+==========================
+
+CREATE OR REPLACE PROCEDURE Select_Emp_Srinii
+(pemp_id IN Emp_Sample.Empno%TYPE,
+ pname out Emp_Sample.Ename%TYPE,
+ pgender out Emp_Sample.Job%TYPE,
+ psal out Emp_Sample.Sal%TYPE
+) 
+IS
+Cursor C1 is
+select * from emp_srini;
+
+cr1 C1 % rowtype;
+BEGIN
+    Open c1;
+    LOOP
+    Fetch c1 into Cr1;
+    exit when c1%notfound;
+    Select name,gender,sal into pname,pgender,psal
+    from emp_srini where empid=pemp_id;
+    dbms_output.put_line(cr1.pname,cr1.pgender,Cr1.psal);
+    end loop;
+    close c1;
+END;
+
+
+
+
+CREATE OR REPLACE PROCEDURE Select_Emp_Srinii
+(
+emp_id  IN  Emp_srini.;
+) 
+IS
+select * from emp_srini;
+
+BEGIN
+    Update Empsrini
+    Set SAL=SAL+10
+    where empid=7389;
+    dbms_output.put_line("Updated..");
+END;
+
+
+ to exec:
+-------------
+
+varible a varchar2(10);
+varible b varchar2(10);
+varible c varchar2(10);
+
+exec Select_Emp_Srinii(&empid,:a,:b,:c);
+
+

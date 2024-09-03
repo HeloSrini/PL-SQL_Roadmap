@@ -1,0 +1,97 @@
+COUNT VARIABLE
+
+DECLARE
+  A NUMBER := 10;
+  N NUMBER := 0;
+BEGIN
+  FOR I IN 1..A LOOP
+      N:= N+1;
+	DBMS_OUTPUT.PUT_LINE('COUNT_IS:' || N);
+ END LOOP;
+END;
+/
+
+_____________________________________________________________________________________________________
+
+DECLARE
+    str VARCHAR2(50) := 'PLSQL';
+    rev_str VARCHAR2(50) := '';
+BEGIN
+    FOR i IN REVERSE 1..LENGTH(str) LOOP
+        rev_str := rev_str || SUBSTR(str, i, 1);
+        DBMS_OUTPUT.PUT_LINE(rev_str);
+    END LOOP;
+END;
+/
+
+_____________________________________________________________________________________________________
+MAX OF 3 NUMBERS
+
+DECLARE
+A NUMBER :=10;
+B NUMBER :=20;
+C NUMBER :=30;
+MAXN NUMBER(10);
+
+BEGIN
+IF A > B AND A > C THEN
+    MAXN :=A;
+    DBMS_OUTPUT.PUT_LINE(MAXN);
+    DBMS_OUTPUT.PUT_LINE('GREATER IS :' || MAXN);
+    
+ELSIF B > C AND B > A THEN
+  MAXN :=B;
+  DBMS_OUTPUT.PUT_LINE(MAXN);
+  DBMS_OUTPUT.PUT_LINE('GREATER IS :' || MAXN);
+ELSE 
+  MAXN :=C;
+  DBMS_OUTPUT.PUT_LINE(MAXN);
+  DBMS_OUTPUT.PUT_LINE('GREATER IS :' || MAXN);
+END IF;
+END;
+/ 
+
+_____________________________________________________________________________________________________
+TO FIND ONLY A ODD NUMBER
+
+DECLARE  
+   A NUMBER := 20;
+BEGIN
+   FOR I IN 1..A LOOP
+         IF MOD(I,2) !=0 THEN
+              DBMS_OUTPUT.PUT_LINE(I);
+         END IF;
+   END LOOP;
+END;
+/  
+_____________________________________________________________________________________________________
+FIND A CHARACTER IS A VOWELS R NOT
+
+DECLARE
+  C VARCHAR2(10):= 'A';
+BEGIN 
+  IF C IN ('A','E','I','O','U','a','e','i','o','u') THEN
+     DBMS_OUTPUT.PUT_LINE('VOWELS');
+  ELSE 
+     DBMS_OUTPUT.PUT_LINE('NOT A VOWELS');
+  END IF;
+END;
+
+FIND A CHARACTER  IS A VOWELS,NUMBER OR A SPECIAL CHARACTER
+
+DECLARE
+    ch CHAR := '&INPUT';
+BEGIN
+    IF ch BETWEEN 'A' AND 'Z' OR ch BETWEEN 'a' AND 'z' THEN
+        DBMS_OUTPUT.PUT_LINE(ch || ' IS A CHARACTER');
+    ELSIF ch BETWEEN '0' AND '100' THEN
+        DBMS_OUTPUT.PUT_LINE(ch || ' IS A Digit');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(ch || ' IS A SPECIAL CHARACTER');
+    END IF;
+END;
+/
+
+_____________________________________________________________________________________________________
+
+

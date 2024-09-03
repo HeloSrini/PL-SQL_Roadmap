@@ -1,0 +1,180 @@
+SQL> CREATE OR REPLACE TRIGGER BEFORE_INSERT
+  2  BEFORE INSERT
+  3  ON Geeks
+  4  FOR EACH ROW
+  5  BEGIN
+  6      INSERT INTO Affect (Id, Name, Score)
+  7      VALUES (:NEW.Id, :NEW.Name, :NEW.Score);
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> select * from affect;
+
+no rows selected
+
+SQL> select * from geeks;
+
+        ID NAME                                                              SCORE
+---------- ------------------------------------------------------------ ----------
+         1 Sam                                                                 800
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (2, 'Ram', 699);
+
+1 row created.
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (3, 'Tom', 250);
+
+1 row created.
+
+SQL>  select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+
+SQL> CREATE OR REPLACE TRIGGER BEFORE_INSERT1
+  2  AFTER INSERT
+  3  ON Geeks
+  4  FOR EACH ROW
+  5  BEGIN
+  6      INSERT INTO Affect (Id, Name, Score)
+  7      VALUES (:NEW.Id, :NEW.Name, :NEW.Score);
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+
+SQL> INSERT INTO Geeks (Id, Name, Score) VALUES (4, 'Om', 350);
+
+1 row created.
+
+SQL> select * from affect;
+
+        ID NAME                                               SCORE
+---------- --------------------------------------------- ----------
+         2 Ram                                                  699
+         3 Tom                                                  250
+         4 Om                                                   350
+         4 Om                                                   350
+
+SQL> commit;
+
+Commit complete.
+
+==================================================================
+
+CREATE OR REPLACE TRIGGER Stud_Srini
+BEFORE UPDATE OF TAMIL,ENGLISH,MATHS,SCIENCE,SOCIAL ON Stud_Srini
+FOR EACH ROW
+BEGIN
+  IF ((:OLD.TAMIL <>:NEW.TAMIL) OR
+        (:OLD.ENGLISH <>:NEW.ENGLISH) OR
+        (:OLD.MATHS <>:NEW.MATHS) OR
+        (:OLD.SCIENCE <>:NEW.SCIENCE) OR
+        (:OLD.SOCIAL<>:NEW.SOCIAL)) THEN
+          :NEW.TOTAL :=  NVL(:NEW.TAMIL,:OLD.TAMIL) +
+	                      NVL(:NEW.ENGLISH,:OLD.ENGLISH) +
+		   NVL(:NEW.MATHS,:OLD.MATHS )+
+           		   NVL(:NEW.SCIENCE,:OLD.SCIENCE)+
+		   NVL(:NEW.SOCIAL,:OLD.SOCIAL);
+ END IF;
+END ;
+/
+
+
+
+
+
+
+SELECT REG_NO,STUD_NAME,DOB,SEX,TAMIL,ENGLISH,SCIENCE,MATHS,SOCIAL,(TAMIL+ENGLISH+SCIENCE+MATHS+SOCIAL) "TOTAL" FROM STUD_SRINI;
+
+ALTER TABLE STUD_SRINI
+ADD TOTAL NUMBER(5);
+
+UPDATE STUD_SRINI
+SET TOTAL= (TAMIL+ENGLISH+SCIENCE+MATHS+SOCIAL);
+
+UPDATE STUD_SRINI
+SET GRADE = CASE
+	WHEN TOTAL BETWEEN 450 AND 500 THEN 'A'
+	WHEN TOTAL BETWEEN 400 AND 449 THEN 'B'
+	WHEN TOTAL BETWEEN 350 AND 399 THEN 'C'
+	WHEN TOTAL BETWEEN 300 AND 349 THEN 'D'
+	WHEN TOTAL BETWEEN 200 AND 299 THEN 'E'
+	ELSE GRADE='F' ;
+END;
+
+========================================================
+-29/8/24
+A Trigger is a Course of action to be taken when any DDL,DML Event Occurs.
+It is named PL/SQL Block like  a Procedure
+
+Why do we Create Triggers?
+
+Control DML
+Implement Complex Business Rule
+Implement Complex Validations
+Generate values for Primary Key
+For Auditing
+Maintain Replicas
+
+Before Trigger
+
+Before Trigger is Executed before Executing a DML Command.
+
+Sequence:
+Trigger Execution
+DML Execution
+
+After Trigger
+
+After Trigger is Executed after Executing a DML Command.
+
+Levels Of Triggers:
+
+1.State_Level --> Executed Only once for the statement
+2.Row_Level ---> Executed Once for each row affected by the DML.
+
+Create Table Emp_Srp_24(
+EID  Number(10),
+NAME  VARCHAR2(10),
+SALARY  Number(10));
+
+Insert into Emp_Srp_24 values(1,'Srini',10000);
+Insert into Emp_Srp_24 values(2,'Srini',9000);
+Insert into Emp_Srp_24 values(3,'Srini',8000);
+Insert into Emp_Srp_24 values(4,'Srini',7000);
+Insert into Emp_Srp_24 values(5,'Srini',6000);
+Insert into Emp_Srp_24 values(6,'Srini',5000);
+Insert into Emp_Srp_24 values(7,'Srini',4000);
+Insert into Emp_Srp_24 values(8,'Srini',3000);
+
+Create OR Replace Trigger emptrg21 
+Before Update On Emp_Srp_24
+Begin
+dbms_output.put_line('Records_Updated');
+End;
+/
+
+Update Emp_Srp_24 Set Salary = Salary * 1.2 where eid=2;
+
+Create OR Replace Trigger emptrg1
+Before Update On Emp_Srp_24 for each row
+Begin
+    dbms_output.put_line('Records_Updated');
+End;
+/
+
+Bind Varibles  | Rowtype Variables:
+-----------------------------------------------
+:Old    :New
